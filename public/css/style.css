@@ -1,0 +1,9 @@
+.text-size {
+    font-size: 1rem; /* Base font size */
+}
+
+@media screen and (min-width: 768px) {
+    .text-size {
+        font-size: 1rem; /* Adjust the size for larger screens */
+    }  
+}
