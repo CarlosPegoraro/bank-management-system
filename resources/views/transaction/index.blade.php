@@ -3,6 +3,7 @@
         <h2 class="text-primary">Lista de Compras</h2>
         <a class="btn btn-primary h-fit" style="height: fit-content" href="{{ route('transaction.create') }}">Cadastrar nova</a>
     </div>
+    <h3 class="text-secondary mb-4">Bem vindo de volta, {{ auth()->user()->name }}!</h3>
 
     @php
         $totalAmount = 0;

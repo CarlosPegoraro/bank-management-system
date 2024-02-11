@@ -15,6 +15,7 @@ class TransactionController extends Controller
     {
         $user = Auth::user();
         $transactions = $user->transactions()->where('finnaly', '>=', now()->format('Y-m-d'))->get();
+        
         return view('transaction.index', compact('transactions'));
     }
 

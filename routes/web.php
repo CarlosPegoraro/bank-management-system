@@ -16,12 +16,13 @@ use App\Http\Controllers\TransactionController;
 */
 
 
-Route::resource('/transaction', TransactionController::class)->middleware('auth');
 
 Route::get('/', [AuthController::class, 'index'])->name('auth.index');
 Route::get('/register', [AuthController::class, 'create'])->name('auth.create');
 Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
 Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
+
+Route::resource('/transaction', TransactionController::class)->middleware('auth');
 
 
 
