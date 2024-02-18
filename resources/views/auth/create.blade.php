@@ -6,7 +6,7 @@
 
             {{-- Header with logo image --}}
             <div>
-                <img src="{{ asset('img/bms.svg') }}" alt="Logo" style="max-height: 200px" class="mb-5" />
+                <img src="{{ asset('img/logo.svg') }}" alt="Logo" style="max-height: 200px" class="mb-5" />
             </div>
 
             <form method="POST" action="{{ route('auth.register') }}">
@@ -30,8 +30,8 @@
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                     <button type="submit" class="btn btn-primary">Registrar</button>
-                    <a class="small fw-500 text-decoration-none" href="{{ route('auth.create') }}">
-                        {{ __('Logar') }}
+                    <a class="small fw-500 text-decoration-none" href="{{ route('auth.index') }}">
+                        {{ __('Possui registro?') }}
                     </a>
                 </div>
             </form>

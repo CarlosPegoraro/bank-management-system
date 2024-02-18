@@ -4,7 +4,7 @@
 
             {{-- Header with logo image --}}
             <div>
-                <img src="{{ asset('img/bms.svg') }}" alt="Logo" style="max-height: 200px" class="mb-5" />
+                <img src="{{ asset('img/logo.svg') }}" alt="Logo" style="max-height: 200px" class="mb-5" />
             </div>
 
             <!-- Login submission form-->

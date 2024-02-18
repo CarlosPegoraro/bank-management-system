@@ -28,7 +28,7 @@ Certifique-se de ter os seguintes requisitos para utilizar o Sistema de Organiza
 
 ## Como Iniciar
 
-1. Acesse o serviço online <a href="http://bms.developerpegoraro.dev.br">clicando aqui</a>
+1. Acesse o serviço online <a href="http://wvl.developerpegoraro.dev.br">clicando aqui</a>
 ## Autores
 
 - Carlos Eduardo Pegoraro Lopes @CarlosPegoraro

@@ -13,6 +13,7 @@
         header {
             box-shadow: 0px 2px 15px 0px #25252555;
         }
+
     </style>
 </head>
 <body>
@@ -20,7 +21,7 @@
 <header>
     <nav class="navbar navbar-expand-md navbar-light bg-light">
         <a class="navbar-brand" href="{{ route('transaction.index') }}">
-            <img src="{{ asset('img/bms.svg') }}" alt="BMS" style="width: 100px"/>
+            <img src="{{ asset('img/logo.svg') }}" alt="BMS" style="width: 100px"/>
         </a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,8 +42,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('analysis.index') }}">Relatório de Análise</a>
                 </li>
-                <li class="nav-item border border-1 border-danger rounded-circle px-1 ms-sm-4">
-                    <a class="nav-link text-danger" title="logout" href="{{ route('auth.logout') }}"><i class="bi bi-person"></i></a>
+                <li class="nav-item rounded-circle px-1 ms-sm-4 w-fit">
+                    <a class="nav-link d-none d-sm-block text-danger" title="logout" href="{{ route('auth.logout') }}"><i class="bi bi-person"></i></a>
+                    <a class="nav-link d-sm-none text-danger" title="logout" href="{{ route('auth.logout') }}">Deslogar</a>
                 </li>
             </ul>
         </div>

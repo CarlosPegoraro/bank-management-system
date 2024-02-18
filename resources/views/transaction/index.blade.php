@@ -5,7 +5,7 @@
         <div class="col-12 col-sm-5">
 
             <div class="row align-items-center mt-3 mt-sm-0 mb-4">
-                <h1 class="col-12 col-sm-5 text-center text-sm-start text-light fw-bold fs-3 mb-3 mb-sm-0">Lista de Compras Em Abertas</h1>
+                <h1 class="col-12 col-sm-5 text-center text-sm-start text-light fw-bold fs-3 mb-3 mb-sm-0">Lista de Compras Em Aberto</h1>
                 <a class="col-6 col-sm-4 nav-link text-primary fw-bold fs-3" href="{{ route('transaction.create') }}">Nova Compra</a>
                 <a class="col-6 col-sm-3 nav-link text-primary fw-bold fs-3" href="{{ route('transaction.extract') }}">Ver Extrato</a>
             </div>
