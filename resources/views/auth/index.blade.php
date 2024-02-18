@@ -1,8 +1,6 @@
 <x-guest title="Login">
     <main class="row" style="height: 100vh">
-
-        {{-- Form container --}}
-        <div class="col-12 col-sm-3 d-flex flex-column justify-content-center align-items-center">
+        <div class="col-12 col-sm-4 d-flex flex-column justify-content-center align-items-center">
 
             {{-- Header with logo image --}}
             <div>
@@ -54,8 +52,8 @@
                                 </label>
                             </div>
 
-                            <a class="small fw-500 text-decoration-none" href="">
-                                {{ __('Esqueceu a Senha') }}
+                            <a class="small fw-bold text-decoration-none" href="">
+                                {{ __('Esqueceu a Senha?') }}
                             </a>
 
                         </div>
@@ -86,7 +84,7 @@
         </div>
 
         {{-- Define background image using inline CSS --}}
-        <div class="d-none d-md-block col-sm-9"
+        <div class="d-none d-md-block col-sm-8"
             style="background-image: url('{{ asset('img/authBackground.jpg') }}'); background-size: cover; background-repeat: no-repeat; background-position: center">
         </div>
     </main>

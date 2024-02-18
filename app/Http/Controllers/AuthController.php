@@ -19,11 +19,13 @@ class AuthController extends Controller
     }
 
     public function login(Request $request) {
-        $user = Auth::attempt($request->only('email', 'password'));
-        if ($user) {
-            return redirect()->route('transaction.index');
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+            return to_route('transaction.index');
         }
-        return redirect()->route('auth.index')->with('error', 'Invalid credentials');
+
+        return to_route('auth.index')->withErrors(['error' => 'Invalid credentials']);
     }
 
     public function register(RegisterRequest $request) {
@@ -36,8 +38,14 @@ class AuthController extends Controller
 
         if ($user) {
             Auth::login($user);
+            return to_route('transaction.index');
         }
 
+        return back()->withErrors('Error creating user. Please try again.')->withInput(['name' => $request->input('name'), 'email' => $request->input('email')]);
+    }
+
+    public function logout() {
+        Auth::logout();
         return to_route('auth.index');
     }
 }

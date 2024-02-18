@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        .nav-item:hover {
-            color: #0EC4EC;
+        .nav-link:hover {
+            color: #0EC4EC !important;
             text-decoration: none;
         }
 
@@ -40,6 +40,9 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('analysis.index') }}">Relatório de Análise</a>
+                </li>
+                <li class="nav-item border border-1 border-danger rounded-circle px-1 ms-sm-4">
+                    <a class="nav-link text-danger" title="logout" href="{{ route('auth.logout') }}"><i class="bi bi-person"></i></a>
                 </li>
             </ul>
         </div>
