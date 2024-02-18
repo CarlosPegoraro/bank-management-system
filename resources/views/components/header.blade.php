@@ -43,8 +43,7 @@
                     <a class="nav-link" href="{{ route('analysis.index') }}">Relatório de Análise</a>
                 </li>
                 <li class="nav-item rounded-circle px-1 ms-sm-4 w-fit">
-                    <a class="nav-link d-none d-sm-block text-danger" title="logout" href="{{ route('auth.logout') }}"><i class="bi bi-person"></i></a>
-                    <a class="nav-link d-sm-none text-danger" title="logout" href="{{ route('auth.logout') }}">Deslogar</a>
+                    <a class="nav-link text-danger" title="logout" href="{{ route('auth.logout') }}">Deslogar</a>
                 </li>
             </ul>
         </div>
