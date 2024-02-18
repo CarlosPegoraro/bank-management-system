@@ -14,9 +14,17 @@ class TransactionController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $transactions = $user->transactions()->where('finnaly', '>=', now()->format('Y-m-d'))->get();
-        
+        $transactions = $user->transactions()->where('finnaly', '>=', now()->format('Y-m-d'))->orderBy('finnaly', 'desc')->get();
+
         return view('transaction.index', compact('transactions'));
+    }
+
+    public function extract()
+    {
+        $user = Auth::user();
+        $transactions = $user->transactions()->orderBy('finnaly', 'asc')->get();
+
+        return view('transaction.extract', compact('transactions'));
     }
 
     public function create()
