@@ -33,10 +33,11 @@ class AuthController extends Controller
             'password' => Hash::make($request->input('password')),
         ]);
 
+
         if ($user) {
             Auth::login($user);
         }
 
-        return redirect()->route('auth.index');
+        return to_route('auth.index');
     }
 }

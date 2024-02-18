@@ -43,19 +43,19 @@
                             type="password"
                             class="form-control border-top-0 border-start-0 border-end-0 mb-1 @error('password') is-invalid @enderror"
                             name="password" required
-                            placeholder="{{ __('Password') }}" />
+                            placeholder="{{ __('Senha') }}" />
 
                         <div class="d-flex justify-content-between mt-2">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="remember" name="remember"
                                     aria-describedby="remember" {{ old('remember') ? 'checked' : '' }}>
                                 <label class="form-check-label" for="remember">
-                                    {{ __('Remember Me') }}
+                                    {{ __('Lembrar Sessão') }}
                                 </label>
                             </div>
 
                             <a class="small fw-500 text-decoration-none" href="">
-                                {{ __('Forgot Password') }}
+                                {{ __('Esqueceu a Senha') }}
                             </a>
 
                         </div>
@@ -79,7 +79,7 @@
 
             <div class="text-center">
                 <a class="small fw-500 text-decoration-none" href="{{ route('auth.create') }}">
-                    {{ __('New User') }}
+                    {{ __('Novo Usuario') }}
                 </a>
             </div>
 
