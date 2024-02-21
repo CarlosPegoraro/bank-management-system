@@ -19,7 +19,7 @@ use App\Http\Controllers\TransactionController;
 
 
 
-Route::get('/', function() {
+Route::get('/', function () {
     return to_route('transaction.index');
 });
 Route::get('/login', [AuthController::class, 'index'])->name('auth.index');
@@ -28,16 +28,12 @@ Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
 Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
 Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
-Route::get('/transaction/extract', [TransactionController::class, 'extract'])->name('transaction.extract');
-Route::resource('/transaction', TransactionController::class)->middleware('auth');
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/transaction/extract', [TransactionController::class, 'extract'])->name('transaction.extract');
+    Route::resource('/transaction', TransactionController::class);
 
-Route::resource('/card', CardController::class)->middleware('auth');
-Route::resource('/analysis', AnalysisController::class)->middleware('auth');
+    Route::resource('/card', CardController::class);
+    Route::resource('/analysis', AnalysisController::class);
 
-Route::get('/new-content', function () {
-    return view('new-content');
-})->middleware('auth')->name('new-content');
-
-
-
-
+    Route::get('/new-content', function () {return view('new-content');})->name('new-content');
+});

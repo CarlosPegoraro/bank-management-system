@@ -1,9 +1,21 @@
-.text-size {
-    font-size: 1rem; /* Base font size */
+
+.height-image {
+    background-image: url('../img/bgMain.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    height: 100vh;
 }
 
-@media screen and (min-width: 768px) {
-    .text-size {
-        font-size: 1rem; /* Adjust the size for larger screens */
-    }  
+@media (max-width: 767px) {
+    .height-image {
+        height: auto;
+    }
+}
+
+.scroll-container {
+    max-height: 70vh; /* Ajuste conforme necessário */
+    overflow-y: auto;
+    width: 100%; /* Para manter a largura total do contêiner pai */
 }
