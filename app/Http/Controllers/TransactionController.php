@@ -60,11 +60,16 @@ class TransactionController extends Controller
     }
 
     public function edit(Transaction $transaction) {
+        dd($transaction);
         return view('transaction.edit', compact('transaction'));
     }
 
     public function destroy(Transaction $transaction) {
         $transaction->delete();
         return redirect()->route('transaction.index');
+    }
+
+    public function show(Transaction $transaction) {
+        return view('transaction.show', compact('transaction'));
     }
 }

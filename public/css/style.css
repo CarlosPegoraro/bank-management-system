@@ -15,7 +15,10 @@
 }
 
 .scroll-container {
-    max-height: 70vh; /* Ajuste conforme necessário */
+    max-height: 60vh; /* Ajuste conforme necessário */
     overflow-y: auto;
-    width: 100%; /* Para manter a largura total do contêiner pai */
+}
+
+.shadow {
+    box-shadow: 2px 2px 10px 1px #25252550 !important;
 }

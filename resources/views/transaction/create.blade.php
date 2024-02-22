@@ -1,4 +1,4 @@
-<x-layout title="Home">
+<x-layout title="Cadastrar Dívida">
     <div class="row" style="height: 100vh">
         <div class="col-12 col-sm-4 p-5">
             <x-navbar title="Nova Compra"/>

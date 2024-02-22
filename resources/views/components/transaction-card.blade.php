@@ -3,10 +3,11 @@
     $formattedMensal = number_format($mensal, 2, ',', '.');
 @endphp
 
-<div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-1 mb-2 p-2 px-3 rounded-3 bg-white">
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-1 mb-3 p-2 px-3 rounded-3 bg-white shadow">
     <div class="d-flex flex-column justify-content-between align-items-center">
         <h1 class="text-secondary fs-6">{{ $transaction->store }} -
-            {{ \Carbon\Carbon::parse($transaction->date)->format('d/m/Y') }}</h1>
+            {{ \Carbon\Carbon::parse($transaction->date)->format('d/m/Y') }} <a href="{{ route('transaction.show', $transaction) }}" class="bi bi-eye-fill"></a>
+        </h1>
 
         <h1 class="fs-6">{{ $transaction->description ?: 'Não Definida' }}</h1>
     </div>

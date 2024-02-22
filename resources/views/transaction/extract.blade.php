@@ -1,4 +1,4 @@
-<x-layout title="Home">
+<x-layout title="Extrato de Compras">
     <div class="row p-2 p-sm-5"
         style="background-image: url('{{ asset('img/bgMain.png') }}'); background-size: cover; background-repeat: no-repeat; background-position: center; height: 100vh">
 
