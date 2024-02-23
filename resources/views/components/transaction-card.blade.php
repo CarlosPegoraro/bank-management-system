@@ -1,7 +1,4 @@
-@php
-    $installmentLabel = $transaction->installments == 1 ? 'vez' : 'vezes';
-    $formattedMensal = number_format($mensal, 2, ',', '.');
-@endphp
+@php($installmentLabel = $transaction->installments == 1 ? 'vez' : 'vezes')
 
 <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-1 mb-3 p-2 px-3 rounded-3 bg-white shadow">
     <div class="d-flex flex-column justify-content-between align-items-center">
@@ -12,11 +9,9 @@
         <h1 class="fs-6">{{ $transaction->description ?: 'Não Definida' }}</h1>
     </div>
     <div class="d-flex flex-column justify-content-between align-items-center">
+        <h1 id="amount" class="text-secondary fs-6"></h1>
         <h1 class="text-secondary fs-6">
-            R$ {{ number_format($transaction->amount, 2, ',', '.') }}
-        </h1>
-        <h1 class="text-secondary fs-6">
-            {{ $transaction->installments }} {{ Str::plural($installmentLabel) }} de R$ {{ $formattedMensal }}
+            {{ $transaction->installments }} {{ Str::plural($installmentLabel) }} de <span id="mensal"></span>
         </h1>
     </div>
     <div class="d-flex flex-sm-column justify-content-center justify-content-sm-between align-items-center">
@@ -29,3 +24,29 @@
         </form>
     </div>
 </div>
+
+<script>
+    var totalAmount = {{ $mensal }};
+
+    var formattedTotalAmount = (totalAmount).toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+
+    // Atualizando o conteúdo da span com o valor formatado
+    document.getElementById('mensal').innerText = formattedTotalAmount;
+
+    var totalAmount = {{ $transaction->amount }};
+
+    var formattedTotalAmount = (totalAmount).toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+
+    // Atualizando o conteúdo da span com o valor formatado
+    document.getElementById('amount').innerText = formattedTotalAmount;
+</script>
