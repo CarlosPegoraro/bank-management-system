@@ -58,4 +58,18 @@ class TransactionController extends Controller
         $user->transactions()->create($request->except('_token'));
         return redirect()->route('transaction.index');
     }
+
+    public function edit(Transaction $transaction) {
+        dd($transaction);
+        return view('transaction.edit', compact('transaction'));
+    }
+
+    public function destroy(Transaction $transaction) {
+        $transaction->delete();
+        return redirect()->route('transaction.index');
+    }
+
+    public function show(Transaction $transaction) {
+        return view('transaction.show', compact('transaction'));
+    }
 }

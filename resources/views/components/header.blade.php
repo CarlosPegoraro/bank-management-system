@@ -28,8 +28,8 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
+        <div class="collapse navbar-collapse w-full" id="navbarNav">
+            <ul class="navbar-nav ml-auto d-flex align-items-center">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('transaction.index') }}">Home</a>
                 </li>
@@ -42,8 +42,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('analysis.index') }}">Relatório de Análise</a>
                 </li>
-                <li class="nav-item rounded-circle px-1 ms-sm-4 w-fit">
-                    <a class="nav-link text-danger" title="logout" href="{{ route('auth.logout') }}">Deslogar</a>
+                <li class="nav-item">
+                    <a class="nav-link text-danger d-sm-none" title="logout" href="{{ route('auth.logout') }}">Deslogar</a>
+                    <a class="nav-link text-danger d-none d-sm-block"
+                        title="logout" href="{{ route('auth.logout') }}"><i class="bi bi-person fs-4"></i></a>
                 </li>
             </ul>
         </div>
