@@ -6,7 +6,7 @@
             {{ \Carbon\Carbon::parse($transaction->date)->format('d/m/Y') }} <a href="{{ route('transaction.show', $transaction) }}" class="bi bi-eye-fill"></a>
         </h1>
 
-        <h1 class="fs-6">{{ $transaction->description ?: 'Não Definida' }}</h1>
+        <h1 class="fs-6">{{ $transaction->description ?: __("Not Defined") }}</h1>
     </div>
     <div class="d-flex flex-column justify-content-between align-items-center">
         <h1 id="amount" class="text-secondary fs-6"></h1>
