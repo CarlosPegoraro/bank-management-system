@@ -31,19 +31,19 @@
         <div class="collapse navbar-collapse w-full" id="navbarNav">
             <ul class="navbar-nav ml-auto d-flex align-items-center">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('transaction.index') }}">Home</a>
+                    <a class="nav-link" href="{{ route('transaction.index') }}">{{ __('Home') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('transaction.extract') }}">Histórico de Compras</a>
+                    <a class="nav-link" href="{{ route('transaction.extract') }}">{{ __('Shop History') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('card.index') }}">Cartões</a>
+                    <a class="nav-link" href="{{ route('card.index') }}">{{ __('Cards') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('analysis.index') }}">Relatório de Análise</a>
+                    <a class="nav-link" href="{{ route('analysis.index') }}">{{ __('Analisys Report') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-danger d-sm-none" title="logout" href="{{ route('auth.logout') }}">Deslogar</a>
+                    <a class="nav-link text-danger d-sm-none" title="logout" href="{{ route('auth.logout') }}">{{ __('Logout') }}</a>
                     <a class="nav-link text-danger d-none d-sm-block"
                         title="logout" href="{{ route('auth.logout') }}"><i class="bi bi-person fs-4"></i></a>
                 </li>
