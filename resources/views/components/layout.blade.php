@@ -19,6 +19,7 @@
     <x-header />
     <div class="container-fluid">
         {{ $slot }}
+        <x-toast />
     </div>
 
 

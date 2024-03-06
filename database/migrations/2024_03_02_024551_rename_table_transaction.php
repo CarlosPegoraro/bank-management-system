@@ -11,9 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->text('description')->nullable();
-        });
+        Schema::rename('transactions', 'debts');
     }
 
     /**
@@ -21,9 +19,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('transactions', static function (Blueprint $table) {
-            $table->dropColumn('description');
-        });
-
+        Schema::rename('debts', 'transactions');
     }
 };

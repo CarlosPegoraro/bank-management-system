@@ -3,8 +3,8 @@
 use App\Http\Controllers\AnalysisController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CardController;
+use App\Http\Controllers\DebtController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +20,7 @@ use App\Http\Controllers\TransactionController;
 
 
 Route::get('/', function () {
-    return to_route('transaction.index');
+    return to_route('debt.index');
 });
 Route::get('/login', [AuthController::class, 'index'])->name('auth.index');
 Route::get('/register', [AuthController::class, 'create'])->name('auth.create');
@@ -29,8 +29,8 @@ Route::post('/register', [AuthController::class, 'register'])->name('auth.regist
 Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/transaction/extract', [TransactionController::class, 'extract'])->name('transaction.extract');
-    Route::resource('/transaction', TransactionController::class);
+    Route::get('/debt/extract', [DebtController::class, 'extract'])->name('debt.extract');
+    Route::resource('/debt', DebtController::class);
 
     Route::resource('/card', CardController::class);
     Route::resource('/analysis', AnalysisController::class);

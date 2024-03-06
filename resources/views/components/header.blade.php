@@ -20,7 +20,7 @@
 
 <header>
     <nav class="navbar navbar-expand-md navbar-light bg-light">
-        <a class="navbar-brand" href="{{ route('transaction.index') }}">
+        <a class="navbar-brand" href="{{ route('debt.index') }}">
             <img src="{{ asset('img/logo.svg') }}" alt="BMS" style="width: 100px"/>
         </a>
 
@@ -31,10 +31,10 @@
         <div class="collapse navbar-collapse w-full" id="navbarNav">
             <ul class="navbar-nav ml-auto d-flex align-items-center">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('transaction.index') }}">{{ __('Home') }}</a>
+                    <a class="nav-link" href="{{ route('debt.index') }}">{{ __('Home') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('transaction.extract') }}">{{ __('Shop History') }}</a>
+                    <a class="nav-link" href="{{ route('debt.extract') }}">{{ __('Shop History') }}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('card.index') }}">{{ __('Cards') }}</a>

@@ -40,6 +40,9 @@
     "Bought Date": "Data da Compra",
     "Update": "Atualizar",
     "All Debts": "Todas as Dívidas",
-    "Our team is working on this news!!!": "Nossa equipe esta trabalhando nessa novidade!!!"
+    "Our team is working on this news!!!": "Nossa equipe esta trabalhando nessa novidade!!!",
+    "Debt Created successfully": "Dívida criada com sucesso",
+    "Debt Updated successfully": "Dívida atualizada com sucesso",
+    "Debt Deleted successfully": "Dívida deletada com sucesso"
 
 }

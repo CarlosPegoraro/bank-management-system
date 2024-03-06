@@ -7,7 +7,7 @@
 
             <div class="row align-items-center  my-4">
                 <h1 class="col-6 text-center text-sm-start text-light fw-bold fs-3 mb-3 mb-sm-0">{{ __('All Debts') }}</h1>
-                <a class="col-6 nav-link text-primary fw-bold fs-3" href="{{ route('transaction.create') }}">{{ __('New Debt') }}</a>
+                <a class="col-6 nav-link text-primary fw-bold fs-3" href="{{ route('debt.create') }}">{{ __('New Debt') }}</a>
             </div>
 
 
@@ -15,11 +15,11 @@
 
             <div class="d-flex flex-column-reverse">
 
-                @foreach ($transactions as $transaction)
-                    @php($mensal = round($transaction->amount / $transaction->installments, 2))
+                @foreach ($debts as $debt)
+                    @php($mensal = round($debt->amount / $debt->installments, 2))
                     @php($totalAmount += $mensal)
 
-                    <x-transaction-card :transaction="$transaction" :mensal="$mensal" />
+                    <x-debt-card :debt="$debt" :mensal="$mensal" />
                 @endforeach
 
                 <div class="mb-4">
