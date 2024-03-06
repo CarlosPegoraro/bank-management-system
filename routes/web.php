@@ -4,6 +4,7 @@ use App\Http\Controllers\AnalysisController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\DebtController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,6 +32,8 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/debt/extract', [DebtController::class, 'extract'])->name('debt.extract');
     Route::resource('/debt', DebtController::class);
+
+    Route::get('/notification/get-json', [NotificationController::class, 'getNotification'])->name('notification.get-json');
 
     Route::resource('/card', CardController::class);
     Route::resource('/analysis', AnalysisController::class);

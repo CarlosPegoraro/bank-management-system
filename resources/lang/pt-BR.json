@@ -43,6 +43,10 @@
     "Our team is working on this news!!!": "Nossa equipe esta trabalhando nessa novidade!!!",
     "Debt Created successfully": "Dívida criada com sucesso",
     "Debt Updated successfully": "Dívida atualizada com sucesso",
-    "Debt Deleted successfully": "Dívida deletada com sucesso"
-
+    "Debt Deleted successfully": "Dívida deletada com sucesso",
+    "created": "criada",
+    "updated": "atualizada",
+    "deleted": "deletada",
+    "restored": "restaurada",
+    "forceDeleted": "deletada forçadamente"
 }

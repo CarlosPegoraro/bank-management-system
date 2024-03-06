@@ -3,6 +3,8 @@
 namespace App\Observers;
 
 use App\Models\Debt;
+use App\Notifications\DebtNotification;
+use Illuminate\Support\Facades\Auth;
 
 class DebtObserver
 {
@@ -11,17 +13,19 @@ class DebtObserver
      */
     public function created(Debt $debt): void
     {
-        session()->flash('toast', [['type' => 'success', 'message' => __('Debt Created successfully')]]);
-    }
+        $user = Auth::user();
 
+        $user->notify(new DebtNotification('created'));
+    }
 
     /**
      * Handle the Debt "updated" event.
      */
     public function updated(Debt $debt): void
     {
+        $user = Auth::user();
 
-        session()->flash('toast', [['type' => 'success', 'message' => __('Debt Updated successfully')]]);
+        $user->notify(new DebtNotification('updated'));
     }
 
     /**
@@ -29,7 +33,9 @@ class DebtObserver
      */
     public function deleted(Debt $debt): void
     {
-        session()->flash('toast', [['type' => 'success', 'message' => __('Debt Deleted successfully')]]);
+        $user = Auth::user();
+
+        $user->notify(new DebtNotification('deleted'));
     }
 
     /**
@@ -37,7 +43,9 @@ class DebtObserver
      */
     public function restored(Debt $debt): void
     {
-        //
+        $user = Auth::user();
+
+        $user->notify(new DebtNotification('restored'));
     }
 
     /**
@@ -45,6 +53,8 @@ class DebtObserver
      */
     public function forceDeleted(Debt $debt): void
     {
-        //
+        $user = Auth::user();
+
+        $user->notify(new DebtNotification('forceDeleted'));
     }
 }

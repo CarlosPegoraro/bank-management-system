@@ -14,7 +14,7 @@ class DebtNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct(private string $event)
     {
         //
     }
@@ -26,29 +26,45 @@ class DebtNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        $channels = ['database'];
+
+        $event = (object) $this->event;
+        if ($event === 'deleted' || $event === 'created') {
+            $channels[] = 'mail';
+        }
+
+        return $channels;
     }
 
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail(object $notifiable): MailMessage
+    public function toMail($notifiable): MailMessage
     {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+        $mailMessage = new MailMessage();
+        $mailMessage
+            ->subject('Sua dívida foi ' . trans($this->event))
+            ->greeting('Prezado usuário, ')
+            ->line('Notificamos que a sua dívida foi '. trans($this->event) . ' com sucesso.')
+            ->action('Visualize Detalhes', url('https://www.wvl.developerpegoraro.com.br/'))
+            ->line('Caso tenha alguma dúvida, contatar o número (11) 972231780 via WhatsApp após as 17:00 horas.')
+            ->salutation('Atenciosamente, equipe WVL');
+
+        return $mailMessage;
     }
 
     /**
      * Get the array representation of the notification.
      *
-     * @return array<string, mixed>
+     * @param  mixed  $notifiable
+     * @return array
      */
-    public function toArray(object $notifiable): array
+    public function toDatabase($notifiable): array
     {
         return [
-            //
+            'channel' => 'toast',
+            'message' => 'A dívida foi ' . trans($this->event) . ' com sucesso.'
         ];
     }
+
 }
