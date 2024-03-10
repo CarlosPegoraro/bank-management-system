@@ -9,9 +9,9 @@
         <h1 class="fs-6">{{ $debt->description ?: __("Not Defined") }}</h1>
     </div>
     <div class="d-flex flex-column justify-content-between align-items-center">
-        <h1 id="amount" class="text-secondary fs-6"></h1>
+        <h1 id="amount{{ $count }}" class="text-secondary fs-6"></h1>
         <h1 class="text-secondary fs-6">
-            {{ $debt->installments }} {{ Str::plural($installmentLabel) }} de <span id="mensal"></span>
+            {{ $debt->installments }} {{ Str::plural($installmentLabel) }} de <span id="mensal{{ $count }}"></span>
         </h1>
     </div>
     <div class="d-flex flex-sm-column justify-content-center justify-content-sm-between align-items-center">
@@ -34,9 +34,9 @@
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
-
+    var mensal = 'mensal' + {{ $count }};
     // Atualizando o conteúdo da span com o valor formatado
-    document.getElementById('mensal').innerText = formattedTotalAmount;
+    document.getElementById(mensal).innerText = formattedTotalAmount;
 
     var totalAmount = {{ $debt->amount }};
 
@@ -47,6 +47,7 @@
         maximumFractionDigits: 2
     });
 
+    var amount = 'amount' + {{ $count }};
     // Atualizando o conteúdo da span com o valor formatado
-    document.getElementById('amount').innerText = formattedTotalAmount;
+    document.getElementById(amount).innerText = formattedTotalAmount;
 </script>
