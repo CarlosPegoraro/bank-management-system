@@ -48,5 +48,7 @@
     "updated": "atualizada",
     "deleted": "deletada",
     "restored": "restaurada",
-    "forceDeleted": "deletada forçadamente"
+    "forceDeleted": "deletada forçadamente",
+    "Do you has a register?": "Você já tem um cadastro?",
+    "New User": "Novo Usuário"
 }

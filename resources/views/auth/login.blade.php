@@ -3,12 +3,12 @@
         <div class="col-12 col-sm-4 d-flex flex-column justify-content-center align-items-center">
 
             {{-- Header with logo image --}}
-            <div>
-                <img src="{{ asset('img/logo.svg') }}" alt="Logo" style="max-height: 200px" class="mb-5" />
+            <div style="max-width: 200px" class="mb-5">
+                <x-logo/>
             </div>
 
             <!-- Login submission form-->
-            <form method="post" action="{{ route('auth.login') }}" class="mb-2">
+            <form method="post" action="{{ route('login') }}" class="mb-2">
                 {{ csrf_field() }}
 
                 <div class="fs-4 mb-3">{{ __('Login') }}</div>
@@ -76,7 +76,7 @@
             </form>
 
             <div class="text-center">
-                <a class="small fw-500 text-decoration-none" href="{{ route('auth.create') }}">
+                <a class="small fw-500 text-decoration-none" href="{{ route('register') }}">
                     {{ __('Novo Usuario') }}
                 </a>
             </div>

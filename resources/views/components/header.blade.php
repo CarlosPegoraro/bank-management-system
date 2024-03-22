@@ -43,9 +43,13 @@
                     <a class="nav-link" href="{{ route('analysis.index') }}">{{ __('Analisys Report') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-danger d-sm-none" title="logout" href="{{ route('auth.logout') }}">{{ __('Logout') }}</a>
-                    <a class="nav-link text-danger d-none d-sm-block"
-                        title="logout" href="{{ route('auth.logout') }}"><i class="bi bi-person fs-4"></i></a>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="nav-link text-danger d-sm-none" title="logout">{{ __('Logout') }}</button>
+                        <button type="submit" class="nav-link text-danger d-none d-sm-block"
+                            title="logout""><i class="bi bi-person fs-4"></i></button>
+
+                    </form>
                 </li>
             </ul>
         </div>
