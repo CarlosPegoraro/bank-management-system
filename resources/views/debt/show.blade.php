@@ -11,7 +11,7 @@
                     <p class="text-dark">{{ __('Bought Date') .':' }} <span class="fw-bold text-primary">{{ \Carbon\Carbon::parse($debt->date)->format('d/m/Y') }}</span></p>
                 </div>
                 <div class="col-12 col-sm-6">
-                    <p class="text-dark">{{ __('Due Date') .':' }} <span class="fw-bold text-primary">{{ \Carbon\Carbon::parse($debt->finnally)->format('d/m/Y') }}</span></p>
+                    <p class="text-dark">{{ __('Due Date') .':' }} <span class="fw-bold text-primary">{{ \Carbon\Carbon::parse($debt->finnaly)->format('d/m/Y') }}</span></p>
                 </div>
                 <div class="col-12 col-sm-6">
                     <p class="text-dark">{{ __('Total Amount') .':' }} <span class="fw-bold text-primary" id="formattedTotalAmount"></span></p>

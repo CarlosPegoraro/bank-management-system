@@ -17,7 +17,7 @@
     <div class="d-flex flex-sm-column justify-content-center justify-content-sm-between align-items-center">
         <a href="{{ route('debt.edit', $debt) }}" class="btn btn-white text-primary fs-4"><i class="bi bi-pencil-square"></i></a>
 
-        <form action="{{ route('debt.destroy', $debt->id) }}" method="post">
+        <form action="{{ route('debt.destroy', $debt) }}" method="post">
             @csrf
             @method('DELETE')
             <button type="submit" class="btn btn-white text-danger mt-3 mt-sm-0 fs-4"><i class="bi bi-trash"></i></button>

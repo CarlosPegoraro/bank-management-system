@@ -35,23 +35,16 @@ class DebtController extends Controller
 
     public function store(Request $request)
     {
-        $installments = 'P' . $request->input('installments') . 'M';
+        $installments = (int) $request->input('installments');
         $dayOfPurchase = new DateTime($request->input('date'));
-        $dayOfMonth = $dayOfPurchase->format('d');
-
-        // If the purchase is made on or before the 29th, start counting months from the 5th of the current month
-        // If made after the 29th, start counting months from the 5th of the next month
-        if ($dayOfMonth <= 29) {
-            // Set the final date to the 5th of the current month
-            $finnaly = new DateTime($dayOfPurchase->format('Y-m-05'));
-        } else {
-            // Set the final date to the 5th of the next month
-            $finnaly = new DateTime($dayOfPurchase->format('Y-m-05'));
-            $finnaly->add(new DateInterval('P1M'));
+        if ($dayOfPurchase->format('d') < '27') {
+            $installments -= 1;
         }
-
-        $finnaly->add(new DateInterval($installments));
+        $dueInterval = 'P' . $installments . 'M';
+        $finnaly = new DateTime($request->input('date'));
+        $finnaly->add(new DateInterval($dueInterval));
         $finnalyFormatted = $finnaly->format('Y-m-d');
+
         $request->merge(['finnaly' => $finnalyFormatted]);
 
         $user = Auth::user();
@@ -65,22 +58,16 @@ class DebtController extends Controller
         return view('debt.edit', compact('debt'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Debt $debt)
     {
-        $debt = Debt::findOrFail($id); // Retrieve the debt to be updated
-
-        $installments = 'P' . $request->input('installments') . 'M';
+        $installments = (int) $request->input('installments');
         $dayOfPurchase = new DateTime($request->input('date'));
-        $dayOfMonth = $dayOfPurchase->format('d');
-
-        // Replicate the logic for calculating "finnaly"
-        if ($dayOfMonth <= 29) {
-            $finnaly = new DateTime($dayOfPurchase->format('Y-m-05'));
-        } else {
-            $finnaly = new DateTime($dayOfPurchase->format('Y-m-05'));
-            $finnaly->add(new DateInterval('P1M'));
+        if ($dayOfPurchase->format('d') < '27') {
+            $installments -= 1;
         }
-        $finnaly->add(new DateInterval($installments));
+        $dueInterval = 'P' . $installments . 'M';
+        $finnaly = new DateTime($request->input('date'));
+        $finnaly->add(new DateInterval($dueInterval));
         $finnalyFormatted = $finnaly->format('Y-m-d');
 
         $request->merge(['finnaly' => $finnalyFormatted]);
