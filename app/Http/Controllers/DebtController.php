@@ -35,16 +35,25 @@ class DebtController extends Controller
 
     public function store(Request $request)
     {
-        $installments = (int) $request->input('installments');
+        $installments = $request->input('installments');
         $dayOfPurchase = new DateTime($request->input('date'));
-        if ($dayOfPurchase->format('d') < '27') {
-            $installments -= 1;
+
+        if ($dayOfPurchase->format('d') < 27) {
+            $dueInterval = 'P' . ($installments - 1) . 'M';
+        } else {
+            $dueInterval = 'P' . $installments . 'M';
         }
-        $dueInterval = 'P' . $installments . 'M';
-        $finnaly = new DateTime($request->input('date'));
-        $finnaly->add(new DateInterval($dueInterval));
+
+        $dayOfPurchase->modify('first day of next month');
+        $dayOfPurchase->modify('+4 days');
+
+        // Calcular a data final
+        $finnaly = $dayOfPurchase->add(new DateInterval($dueInterval));
+
+        // Formatar a data final
         $finnalyFormatted = $finnaly->format('Y-m-d');
 
+        // Salvar a data final na requisição
         $request->merge(['finnaly' => $finnalyFormatted]);
 
         $user = Auth::user();
@@ -60,19 +69,27 @@ class DebtController extends Controller
 
     public function update(Request $request, Debt $debt)
     {
-        $installments = (int) $request->input('installments');
+        $installments = $request->input('installments');
         $dayOfPurchase = new DateTime($request->input('date'));
-        if ($dayOfPurchase->format('d') < '27') {
-            $installments -= 1;
+
+        if ($dayOfPurchase->format('d') < 27) {
+            $dueInterval = 'P' . ($installments - 1) . 'M';
+        } else {
+            $dueInterval = 'P' . $installments . 'M';
         }
-        $dueInterval = 'P' . $installments . 'M';
-        $finnaly = new DateTime($request->input('date'));
-        $finnaly->add(new DateInterval($dueInterval));
+
+        $dayOfPurchase->modify('first day of next month');
+        $dayOfPurchase->modify('+4 days');
+
+        // Calcular a data final
+        $finnaly = $dayOfPurchase->add(new DateInterval($dueInterval));
+
+        // Formatar a data final
         $finnalyFormatted = $finnaly->format('Y-m-d');
 
+        // Salvar a data final na requisição
         $request->merge(['finnaly' => $finnalyFormatted]);
 
-        // Update the debt with the new values
         $debt->update($request->except(['_token', '_method']));
 
         return redirect()->route('debt.index')
