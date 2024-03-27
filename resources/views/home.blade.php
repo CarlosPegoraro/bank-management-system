@@ -39,6 +39,8 @@
                 <a class="col-6 nav-link text-primary fw-bold fs-3"
                     href="{{ route('card.create') }}">{{ __('New Card') }}</a>
             </div>
+
+            <livewire:card />
         </div>
     </div>
 </x-layout>

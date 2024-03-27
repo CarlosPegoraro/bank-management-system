@@ -69,6 +69,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/notification/get-json', [NotificationController::class, 'getNotification'])->name('notification.get-json');
 
+    Route::get('/card/{card}/addCredit', [CardController::class, 'addCredit'])->name('card.addCredit');
     Route::resource('/card', CardController::class);
     Route::resource('/analysis', AnalysisController::class);
 

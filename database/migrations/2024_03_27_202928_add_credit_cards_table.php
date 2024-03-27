@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('debts', function (Blueprint $table) {
-            $table->foreignId('card_id')->nullable()->constrained();
+        Schema::table('cards', function (Blueprint $table) {
+            $table->float('credit')->nullable();
         });
     }
 
@@ -21,9 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('debts', function (Blueprint $table) {
-            $table->dropForeign(['card_id']);
-            $table->dropColumn('card_id');
+        Schema::table('cards', function (Blueprint $table) {
+            $table->dropColumn('credit');
         });
     }
 };

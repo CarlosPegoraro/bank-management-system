@@ -22,3 +22,11 @@
 .shadow {
     box-shadow: 2px 2px 10px 1px #25252550 !important;
 }
+
+.text-black {
+    color: #363636 !important;
+}
+
+.text-primary {
+    color: #01D1FF !important;
+}
