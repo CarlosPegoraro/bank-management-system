@@ -19,7 +19,7 @@
                     @foreach ($debts as $debt)
                         @php($mensal = round($debt->amount / $debt->installments, 2))
                         @php($totalAmount += $mensal)
-                        
+
                         <x-debt-card :debt="$debt" :mensal="$mensal" :count="$count"/>
                         @php($count++)
                     @endforeach
@@ -30,6 +30,14 @@
                         {{ __('Total Month') }} <span id="formattedTotalAmount" class="text-primary fw-bold"></span>
                     </h4>
                 </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-7 p-4 rounded-lg">
+
+            <div class="row align-items-center mt-3 mt-sm-0 mb-4">
+                <h1 class="col-12 col-sm-6 text-center text-white text-sm-start fw-bold fs-3 mb-3 mb-sm-0">{{ __('Registered Cards') }}</h1>
+                <a class="col-6 nav-link text-primary fw-bold fs-3"
+                    href="{{ route('card.create') }}">{{ __('New Card') }}</a>
             </div>
         </div>
     </div>

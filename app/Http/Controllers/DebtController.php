@@ -11,14 +11,6 @@ use Illuminate\Support\Facades\Auth;
 
 class DebtController extends Controller
 {
-    public function index()
-    {
-        $user = Auth::user();
-        $debts = $user->debts()->where('finnaly', '>=', now()->format('Y-m-d'))->orderBy('finnaly', 'desc')->get();
-
-        return view('debt.index', compact('debts'));
-    }
-
     public function extract()
     {
         $user = Auth::user();
@@ -58,7 +50,7 @@ class DebtController extends Controller
 
         $user = Auth::user();
         $user->debts()->create($request->except('_token'));
-        return redirect()->route('debt.index')
+        return redirect()->route('home')
             ->with('toast', [['type' => 'success', 'message' => __('Debt Created successfully')]]);
     }
 
@@ -92,7 +84,7 @@ class DebtController extends Controller
 
         $debt->update($request->except(['_token', '_method']));
 
-        return redirect()->route('debt.index')
+        return redirect()->route('home')
             ->with('toast', [['type' => 'success', 'message' => __('Debt Updated successfully')]]);
     }
 
@@ -100,7 +92,7 @@ class DebtController extends Controller
     public function destroy(Debt $debt)
     {
         $debt->delete();
-        return redirect()->route('debt.index')
+        return redirect()->route('home')
             ->with('toast', [['type' => 'success', 'message' => __('Debt Deleted successfully')]]);
     }
 

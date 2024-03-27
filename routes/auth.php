@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\DebtController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 
@@ -60,6 +61,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+
+    Route::get('/', [HomeController::class, 'index'])->name('home');
 
     Route::get('/debt/extract', [DebtController::class, 'extract'])->name('debt.extract');
     Route::resource('/debt', DebtController::class);

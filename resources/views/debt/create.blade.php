@@ -1,7 +1,7 @@
 <x-layout title="Cadastrar Dívida">
     <div class="row" style="height: 100vh">
         <div class="col-12 col-sm-4 p-5">
-            <x-navbar title="Nova Compra"/>
+            <x-navbar title="{{ __('New Debt') }}"/>
             <h1 class="text-secondary my-4">{{ __('Register New Debt') }}</h1>
             <form action="{{ route('debt.store') }}" method="post">
                 @csrf
