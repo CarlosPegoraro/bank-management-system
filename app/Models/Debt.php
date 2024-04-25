@@ -10,7 +10,7 @@ class Debt extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['date', 'store', 'amount', 'installments', 'finnaly', 'description'];
+    protected $fillable = ['date', 'store', 'amount', 'installments', 'finnaly', 'description', 'card_id'];
 
     protected $casts = [
         'date' => 'date',

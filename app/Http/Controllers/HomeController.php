@@ -9,10 +9,6 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
-        $debts = $user->debts()->where('finnaly', '>=', now()->format('Y-m-d'))->orderBy('finnaly', 'desc')->get();
-        $cards = $user->cards()->get();
-
-        return view('home', compact('debts', 'cards'));
+        return view('home');
     }
 }

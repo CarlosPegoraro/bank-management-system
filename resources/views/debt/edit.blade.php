@@ -27,6 +27,15 @@
                         <label for="date" class="form-label">{{ __('Bought Date') }}</label>
                         <input required type="date" name="date" id="date" class="form-control" value="{{ $debt->date ?: old('date') }}" />
                     </div>
+                    <div class="form-group">
+                        <label for="card_id" class="form-label">{{ __('Card') }}</label>
+                        <select required name="card_id" id="card_id" class="form-control">
+                            <option value="{{ $debt->card?->id }}">{{ $debt->card?->number }}</option>
+                            @foreach ($cards as $card)
+                                <option value="{{ $card->id }}">{{ $card->number }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary mt-4">{{ __('Update') }}</button>
             </form>

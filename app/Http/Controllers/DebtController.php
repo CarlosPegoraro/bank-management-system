@@ -21,9 +21,9 @@ class DebtController extends Controller
 
     public function create()
     {
-        return view('debt.create');
+        $cards = Auth::user()->cards;
+        return view('debt.create', compact('cards'));
     }
-
 
     public function store(Request $request)
     {
@@ -39,13 +39,10 @@ class DebtController extends Controller
         $dayOfPurchase->modify('first day of next month');
         $dayOfPurchase->modify('+4 days');
 
-        // Calcular a data final
         $finnaly = $dayOfPurchase->add(new DateInterval($dueInterval));
 
-        // Formatar a data final
         $finnalyFormatted = $finnaly->format('Y-m-d');
 
-        // Salvar a data final na requisição
         $request->merge(['finnaly' => $finnalyFormatted]);
 
         $user = Auth::user();
@@ -56,7 +53,8 @@ class DebtController extends Controller
 
     public function edit(Debt $debt)
     {
-        return view('debt.edit', compact('debt'));
+        $cards = Auth::user()->cards;
+        return view('debt.edit', compact('debt', 'cards'));
     }
 
     public function update(Request $request, Debt $debt)
@@ -73,13 +71,10 @@ class DebtController extends Controller
         $dayOfPurchase->modify('first day of next month');
         $dayOfPurchase->modify('+4 days');
 
-        // Calcular a data final
         $finnaly = $dayOfPurchase->add(new DateInterval($dueInterval));
 
-        // Formatar a data final
         $finnalyFormatted = $finnaly->format('Y-m-d');
 
-        // Salvar a data final na requisição
         $request->merge(['finnaly' => $finnalyFormatted]);
 
         $debt->update($request->except(['_token', '_method']));
