@@ -1,42 +1,52 @@
-<x-guest title="Registrar">
-    <main class="row" style="height: 100vh">
+<x-guest-layout>
+    <form method="POST" action="{{ route('register') }}">
+        @csrf
 
-        {{-- Form container --}}
-        <div class="col-12 col-sm-3 d-flex flex-column justify-content-center align-items-center">
-
-            {{-- Header with logo image --}}
-            <div style="max-width: 200px" class="mb-5">
-                <x-logo/>
-            </div>
-
-            <form method="POST" action="{{ route('register') }}">
-                @csrf
-                <h1 class="text-primary mb-4">{{ __('New User') }}</h1>
-                <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="{{ __('Name') }}" id="name" name="name" value="{{ old('name') }}" required>
-                </div>
-                <div class="mb-3">
-                    <input type="email" class="form-control" placeholder="{{ __('Email') }}" id="email" name="email" value="{{ old('email') }}" required>
-                </div>
-                <div class="mb-3">
-                    <input type="password" class="form-control" placeholder="{{ __('Password') }}" id="password" name="password" required>
-                </div>
-                <div class="mb-3">
-                    <input type="password" class="form-control" placeholder="{{ __('Confirm Password') }}" id="password_confirmation" name="password_confirmation" required>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                    <button type="submit" class="btn btn-primary">{{ __('Register') }}</button>
-                    <a class="small fw-500 text-decoration-none" href="{{ route('login') }}">
-                        {{ __('Do you has a register?') }}
-                    </a>
-                </div>
-            </form>
-
-
+        <!-- Name -->
+        <div>
+            <x-input-label for="name" :value="__('Name')" />
+            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+            <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
-        <div class="d-none d-md-block col-sm-9"
-            style="background-image: url('{{ asset('img/authBackground.jpg') }}'); background-size: cover; background-repeat: no-repeat; background-position: center">
+        <!-- Email Address -->
+        <div class="mt-4">
+            <x-input-label for="email" :value="__('Email')" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+            <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
-    </main>
-</x-guest>
+
+        <!-- Password -->
+        <div class="mt-4">
+            <x-input-label for="password" :value="__('Password')" />
+
+            <x-text-input id="password" class="block mt-1 w-full"
+                            type="password"
+                            name="password"
+                            required autocomplete="new-password" />
+
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="mt-4">
+            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+
+            <x-text-input id="password_confirmation" class="block mt-1 w-full"
+                            type="password"
+                            name="password_confirmation" required autocomplete="new-password" />
+
+            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        </div>
+
+        <div class="flex items-center justify-end mt-4">
+            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
+                {{ __('Already registered?') }}
+            </a>
+
+            <x-primary-button class="ms-4">
+                {{ __('Register') }}
+            </x-primary-button>
+        </div>
+    </form>
+</x-guest-layout>
