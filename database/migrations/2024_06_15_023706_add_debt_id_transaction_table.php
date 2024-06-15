@@ -11,7 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::rename('transactions', 'debts');
+        Schema::table('transactions', function (Blueprint $table) {
+            $table->renameColumn('finnaly', 'finally');
+            $table->foreignId('card_id')->constrained();
+            $table->boolean('positive');
+        });
     }
 
     /**
@@ -19,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::rename('debts', 'transactions');
+        //
     }
 };

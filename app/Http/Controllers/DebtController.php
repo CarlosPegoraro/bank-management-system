@@ -2,34 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Debt;
+use App\Models\Transaction;
 use DateTime;
 use DateInterval;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class DebtController extends Controller
+class TransactionController extends Controller
 {
     public function index()
     {
         $user = Auth::user();
-        $debts = $user->debts()->where('finnaly', '>=', now()->format('Y-m-d'))->orderBy('finnaly', 'desc')->get();
+        $transactions = $user->transactions()->where('finnaly', '>=', now()->format('Y-m-d'))->orderBy('finnaly', 'desc')->get();
 
-        return view('debt.index', compact('debts'));
+        return view('transaction.index', compact('transactions'));
     }
 
     public function extract()
     {
         $user = Auth::user();
-        $debts = $user->debts()->orderBy('finnaly', 'asc')->get();
+        $transactions = $user->transactions()->orderBy('finnaly', 'asc')->get();
 
-        return view('debt.extract', compact('debts'));
+        return view('transaction.extract', compact('transactions'));
     }
 
     public function create()
     {
-        return view('debt.create');
+        return view('transaction.create');
     }
 
 
@@ -57,17 +57,17 @@ class DebtController extends Controller
         $request->merge(['finnaly' => $finnalyFormatted]);
 
         $user = Auth::user();
-        $user->debts()->create($request->except('_token'));
-        return redirect()->route('debt.index')
-            ->with('toast', [['type' => 'success', 'message' => __('Debt Created successfully')]]);
+        $user->transactions()->create($request->except('_token'));
+        return redirect()->route('transaction.index')
+            ->with('toast', [['type' => 'success', 'message' => __('transaction Created successfully')]]);
     }
 
-    public function edit(Debt $debt)
+    public function edit(Transaction $transaction)
     {
-        return view('debt.edit', compact('debt'));
+        return view('transaction.edit', compact('transaction'));
     }
 
-    public function update(Request $request, Debt $debt)
+    public function update(Request $request, Transaction $transaction)
     {
         $installments = $request->input('installments');
         $dayOfPurchase = new DateTime($request->input('date'));
@@ -90,22 +90,22 @@ class DebtController extends Controller
         // Salvar a data final na requisição
         $request->merge(['finnaly' => $finnalyFormatted]);
 
-        $debt->update($request->except(['_token', '_method']));
+        $transaction->update($request->except(['_token', '_method']));
 
-        return redirect()->route('debt.index')
-            ->with('toast', [['type' => 'success', 'message' => __('Debt Updated successfully')]]);
+        return redirect()->route('transaction.index')
+            ->with('toast', [['type' => 'success', 'message' => __('transaction Updated successfully')]]);
     }
 
 
-    public function destroy(Debt $debt)
+    public function destroy(Transaction $transaction)
     {
-        $debt->delete();
-        return redirect()->route('debt.index')
-            ->with('toast', [['type' => 'success', 'message' => __('Debt Deleted successfully')]]);
+        $transaction->delete();
+        return redirect()->route('transaction.index')
+            ->with('toast', [['type' => 'success', 'message' => __('transaction Deleted successfully')]]);
     }
 
-    public function show(Debt $debt)
+    public function show(Transaction $transaction)
     {
-        return view('debt.show', compact('debt'));
+        return view('transaction.show', compact('transaction'));
     }
 }

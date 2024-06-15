@@ -22,7 +22,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            return to_route('debt.index');
+            return to_route('transaction.index');
         }
 
         return to_route('auth.index')->withErrors(['error' => 'Invalid credentials']);
@@ -38,7 +38,7 @@ class AuthController extends Controller
 
         if ($user) {
             Auth::login($user);
-            return to_route('debt.index');
+            return to_route('transaction.index');
         }
 
         return back()->withErrors('Error creating user. Please try again.')->withInput(['name' => $request->input('name'), 'email' => $request->input('email')]);

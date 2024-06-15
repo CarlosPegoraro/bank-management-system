@@ -9,4 +9,8 @@ class CardController extends Controller
     public function index() {
         return to_route('new-content');
     }
+
+    public function create() {
+        return view('card.create');
+    }
 }

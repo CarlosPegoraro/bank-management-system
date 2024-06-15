@@ -3,7 +3,7 @@
         <div class="col-12 col-sm-4 p-5">
             <x-navbar title="Nova Compra"/>
             <h1 class="text-secondary my-4">{{ __('Register New Debt') }}</h1>
-            <form action="{{ route('debt.store') }}" method="post">
+            <form action="{{ route('transaction.store') }}" method="post">
                 @csrf
                 <div class="d-flex flex-column gap-3">
                     <div class="form-group">

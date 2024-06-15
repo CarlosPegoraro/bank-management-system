@@ -11,8 +11,8 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\CardController;
-use App\Http\Controllers\DebtController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -61,8 +61,8 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 
-    Route::get('/debt/extract', [DebtController::class, 'extract'])->name('debt.extract');
-    Route::resource('/debt', DebtController::class);
+    Route::get('/transaction/extract', [TransactionController::class, 'extract'])->name('transaction.extract');
+    Route::resource('/transaction', TransactionController::class);
 
     Route::get('/notification/get-json', [NotificationController::class, 'getNotification'])->name('notification.get-json');
 
