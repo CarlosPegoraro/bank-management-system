@@ -3,7 +3,7 @@
         <div class="col-12 col-sm-4 p-5">
             <x-navbar title="New Card"/>
             <h1 class="text-secondary my-4">{{ __('Register New Card') }}</h1>
-            <form action="{{ route('transaction.store') }}" method="post">
+            <form action="{{ route('card.store') }}" method="post">
                 @csrf
                 <div class="d-flex flex-column gap-3">
                     {{-- To Do: add a mask --}}

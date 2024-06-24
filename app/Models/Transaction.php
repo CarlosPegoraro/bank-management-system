@@ -9,11 +9,11 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['date', 'store', 'amount', 'installments', 'finnaly', 'description'];
+    protected $fillable = ['date', 'store', 'amount', 'installments', 'finally', 'description'];
 
     protected $casts = [
         'date' => 'date',
-        'finnaly' => 'date',
+        'finally' => 'date',
     ];
 
     public function user()

@@ -24,6 +24,5 @@ return new class extends Migration
         Schema::table('transactions', static function (Blueprint $table) {
             $table->dropColumn('description');
         });
-
     }
 };
