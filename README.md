@@ -1,38 +1,35 @@
-# BMS - Bank Management System
+# Verde Finanças
 
-Bem-vindo ao BMS Uma aplicação criada para facilitar o gerenciamento e organização das suas finanças pessoais.
+Sistema pessoal de gestão financeira feito com Laravel, Livewire, Tailwind CSS e PostgreSQL.
 
-## Como Funciona
+## Recursos
 
-1. **Registro de Contas:**
-   - Comece registrando suas contas no sistema. Insira informações relevantes, como o nome da conta, o valor devido, e a data de compra.
+- Entradas e saídas avulsas, mensais ou parceladas.
+- Confirmação de pagamento/recebimento e projeção de seis meses.
+- Dashboard mensal e fluxo de 12 meses (cinco anteriores, atual e seis futuros).
+- Contas, cartões com fechamento/vencimento e categorias pessoais.
 
-2. **Index de Contas:**
-   - Após salvar as informações, você poderá visualizar todas as suas contas no index do sistema. Este painel oferece uma visão clara de quanto você deve pagar no mês e quais são as dívidas atuais.
+## Executar localmente
 
-3. **Acompanhamento Mensal:**
-   - Utilize o sistema para acompanhar suas despesas mensais. Visualize de forma fácil e rápida quais contas precisam ser pagas, evitando esquecimentos e atrasos.
+1. Crie um banco PostgreSQL chamado `verde_financas` e ajuste as credenciais em `.env` a partir de `.env.example`.
+2. Instale dependências: `composer install && npm install`.
+3. Gere a chave e as tabelas: `php artisan key:generate && php artisan migrate`.
+4. Inicie o ambiente: `composer run dev`.
 
-4. **Alertas e Lembretes:** **(Futura implementação)**
-   - Configure alertas e lembretes para as datas de vencimento das suas contas. Nunca mais perca um prazo de pagamento importante.
+Para validar: `php artisan test` e `npm run build`.
 
-5. **Relatórios Detalhados:** **(Futura automatização_)**
-   - Obtenha relatórios detalhados sobre seus gastos mensais. Analise padrões de despesas e identifique oportunidades de economia.
+## Docker
 
-## Requisitos
+O ambiente de desenvolvimento segue o padrão dos projetos em `/var/www/portfolio/docker`:
 
-Certifique-se de ter os seguintes requisitos para utilizar o Sistema de Organização de Contas:
+```bash
+docker compose -f docker/compose.yaml up --build
+```
 
-- Navegador Web Atualizado
-- Conexão com a Internet
+Aplicação: `http://localhost:5101`; Vite: `http://localhost:5102`; PostgreSQL: porta `5433`.
 
-## Como Iniciar
+Para produção, crie `docker/.env` a partir de `docker/.env.example`, defina domínio, `APP_KEY` e senha do banco. Em seguida execute:
 
-1. Acesse o serviço online <a href="http://wvl.developerpegoraro.dev.br">clicando aqui</a>
-## Autores
-
-- Carlos Eduardo Pegoraro Lopes @CarlosPegoraro
-
-## Licença
-
-Este projeto é licenciado sob a [Licença MIT](LICENSE).
+```bash
+docker compose --env-file docker/.env -f docker/compose.prod.yaml up -d --build
+```
