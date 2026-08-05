@@ -1,4 +1,4 @@
-name: verde-financas
+name: cade-o-meu-dinheiro
 
 services:
   app:
@@ -14,12 +14,9 @@ services:
       DB_CONNECTION: pgsql
       DB_HOST: database
       DB_PORT: 5432
-      DB_DATABASE: verde_financas
-      DB_USERNAME: verde
-      DB_PASSWORD: verde
-    volumes:
-      - ..:/var/www/html
-      - composer_vendor:/var/www/html/vendor
+      DB_DATABASE: comd
+      DB_USERNAME: comd
+      DB_PASSWORD: comd
     depends_on:
       database:
         condition: service_healthy
@@ -37,23 +34,39 @@ services:
       - ..:/var/www/html
       - node_modules:/var/www/html/node_modules
 
+  playwright:
+    image: mcr.microsoft.com/playwright:v1.62.1-noble
+    profiles: ["e2e"]
+    working_dir: /var/www/html
+    command: sh -c "npm ci && npm run test:e2e"
+    environment:
+      PLAYWRIGHT_BASE_URL: http://app:8000
+    volumes:
+      - ..:/var/www/html
+      - playwright_node_modules:/var/www/html/node_modules
+    depends_on:
+      app:
+        condition: service_started
+      database:
+        condition: service_healthy
+
   database:
     image: postgres:18-alpine
     ports:
       - "5433:5432"
     environment:
-      POSTGRES_DB: verde_financas
-      POSTGRES_USER: verde
-      POSTGRES_PASSWORD: verde
+      POSTGRES_DB: comd
+      POSTGRES_USER: comd
+      POSTGRES_PASSWORD: comd
     volumes:
       - postgres_data:/var/lib/postgresql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U verde -d verde_financas"]
+      test: ["CMD-SHELL", "pg_isready -U comd -d comd"]
       interval: 5s
       timeout: 5s
       retries: 10
 
 volumes:
-  composer_vendor:
   node_modules:
+  playwright_node_modules:
   postgres_data:

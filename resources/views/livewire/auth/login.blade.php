@@ -1,1 +1,21 @@
-<main class="grid min-h-screen place-items-center p-5"><section class="w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl shadow-emerald-950/30"><div class="mb-8"><span class="grid size-11 place-items-center rounded-2xl bg-emerald-500 font-bold text-emerald-950">V</span><h1 class="mt-5 text-2xl font-semibold">Suas finanças, claras.</h1><p class="mt-1 text-sm text-slate-500">Entre para acompanhar seus próximos passos.</p></div><form wire:submit="login" class="space-y-4"><label class="field">E-mail<input wire:model="email" type="email" autofocus></label><label class="field">Senha<input wire:model="password" type="password"></label>@error('email')<p class="text-sm text-rose-600">{{ $message }}</p>@enderror<label class="flex gap-2 text-sm text-slate-500"><input wire:model="remember" type="checkbox"> Manter conectado</label><button class="btn-primary w-full">Entrar</button></form><p class="mt-6 text-center text-sm text-slate-500">Ainda não tem conta? <a wire:navigate class="font-medium text-emerald-700" href="{{ route('register') }}">Começar agora</a></p></section></main>
+<main class="auth-wrap">
+    <section class="auth-card">
+        <div class="auth-form-pane">
+            <a wire:navigate href="{{ route('dashboard') }}" class="auth-logo"><img src="{{ asset('logo.svg') }}" alt="Cadê o Meu Dinheiro?"></a>
+            <div class="auth-intro"><p class="eyebrow">BEM-VINDO DE VOLTA</p><h1>Suas finanças,<br>claras e sob controle.</h1><p>Acesse sua conta para acompanhar cada passo do seu dinheiro.</p></div>
+            <form wire:submit="login" class="auth-form">
+                <label class="auth-field">E-mail<input wire:model="email" type="email" autocomplete="email" autofocus placeholder="voce@exemplo.com"></label>
+                <label class="auth-field">Senha<input wire:model="password" type="password" autocomplete="current-password" placeholder="Digite sua senha"></label>
+                @error('email')<p class="text-sm text-rose-600">{{ $message }}</p>@enderror
+                <div class="auth-options"><label><input wire:model="remember" type="checkbox"> <span>Manter conectado</span></label><button type="button">Esqueci minha senha</button></div>
+                <button class="auth-submit">Entrar na minha conta <span>→</span></button>
+            </form>
+            <p class="auth-switch">Ainda não tem conta? <a wire:navigate href="{{ route('register') }}">Criar minha conta</a></p>
+        </div>
+        <div class="auth-art-pane">
+            <div class="auth-art-copy"><span>✦</span><p>Organize hoje.<br><b>Realize amanhã.</b></p></div>
+            <img src="{{ asset('images/finance-auth-illustration.svg') }}" alt="Ilustração de organização financeira" class="auth-art">
+            <p class="auth-art-footer">Seu dinheiro trabalhando com você.</p>
+        </div>
+    </section>
+</main>

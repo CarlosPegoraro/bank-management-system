@@ -1,4 +1,4 @@
-name: verde-financas
+name: cade-o-meu-dinheiro
 
 services:
   app:
@@ -38,11 +38,11 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=proxy
-      - traefik.http.routers.verde-financas.rule=Host(`${APP_DOMAIN}`)
-      - traefik.http.routers.verde-financas.entrypoints=websecure
-      - traefik.http.routers.verde-financas.tls=true
-      - traefik.http.routers.verde-financas.tls.certresolver=letsencrypt
-      - traefik.http.services.verde-financas.loadbalancer.server.port=80
+      - traefik.http.routers.cade-o-meu-dinheiro.rule=Host(`${APP_DOMAIN}`)
+      - traefik.http.routers.cade-o-meu-dinheiro.entrypoints=websecure
+      - traefik.http.routers.cade-o-meu-dinheiro.tls=true
+      - traefik.http.routers.cade-o-meu-dinheiro.tls.certresolver=letsencrypt
+      - traefik.http.services.cade-o-meu-dinheiro.loadbalancer.server.port=80
 
   database:
     image: postgres:18-alpine

@@ -1,1 +1,48 @@
-<div><header class="mb-8 flex flex-wrap items-end justify-between gap-4"><div><p class="text-sm font-medium text-emerald-700">{{ now()->translatedFormat('F \d\e Y') }}</p><h1 class="mt-1 text-3xl font-semibold tracking-tight">Visão geral</h1><p class="mt-1 text-sm text-slate-500">Tudo que está acontecendo — e o que vem por aí.</p></div><a wire:navigate href="{{ route('transactions') }}" class="btn-primary">+ Nova transação</a></header><section class="grid gap-4 md:grid-cols-3"><article class="card"><p class="text-sm text-slate-500">Entradas do mês</p><p class="mt-2 text-2xl font-semibold text-emerald-700">R$ {{ number_format($income,2,',','.') }}</p><p class="mt-2 text-xs text-slate-400">R$ {{ number_format($settledIncome,2,',','.') }} recebidos</p></article><article class="card"><p class="text-sm text-slate-500">Saídas do mês</p><p class="mt-2 text-2xl font-semibold text-rose-600">R$ {{ number_format($expense,2,',','.') }}</p><p class="mt-2 text-xs text-slate-400">R$ {{ number_format($settledExpense,2,',','.') }} pagos</p></article><article class="card bg-emerald-950 text-white"><p class="text-sm text-emerald-100">Saldo previsto</p><p class="mt-2 text-2xl font-semibold">R$ {{ number_format($income-$expense,2,',','.') }}</p><p class="mt-2 text-xs text-emerald-200">inclui pendências do mês</p></article></section><section class="mt-5 grid gap-5 lg:grid-cols-[1.8fr_1fr]"><article class="card overflow-hidden"><div class="mb-5 flex items-center justify-between"><div><h2 class="font-semibold">Fluxo anual</h2><p class="text-sm text-slate-500">Realizado e previsto por mês</p></div><div class="flex gap-3 text-xs"><span class="flex items-center gap-1"><i class="size-2 rounded-full bg-emerald-500"></i>Entradas</span><span class="flex items-center gap-1"><i class="size-2 rounded-full bg-rose-400"></i>Saídas</span></div></div>@php($max=max(1,$months->max('income'),$months->max('expense'))) <div class="flex h-52 items-end gap-2 border-b border-slate-100 pb-2">@foreach($months as $month)<div class="group flex min-w-0 flex-1 flex-col justify-end gap-1 text-center" title="{{ $month['label'] }}: entradas R$ {{ $month['income'] }}, saídas R$ {{ $month['expense'] }}"><div class="rounded-t bg-emerald-500/85" style="height:{{ max(4,($month['income']/$max)*160) }}px"></div><div class="rounded-t bg-rose-400/85" style="height:{{ max(4,($month['expense']/$max)*160) }}px"></div><span class="mt-2 truncate text-[10px] text-slate-400">{{ $month['label'] }}</span></div>@endforeach</div></article><article class="card"><h2 class="font-semibold">Próximos lançamentos</h2><div class="mt-3 divide-y divide-slate-100">@forelse($upcoming as $item)<div class="py-3"><div class="flex justify-between gap-3"><p class="truncate text-sm font-medium">{{ $item->description }}</p><strong class="whitespace-nowrap text-sm {{ $item->type==='income'?'text-emerald-700':'text-rose-600' }}">{{ $item->type==='income'?'+':'-' }} R$ {{ number_format($item->amount,2,',','.') }}</strong></div><p class="mt-1 text-xs text-slate-400">{{ $item->due_date->format('d/m') }} · {{ $item->category?->name ?? 'Sem categoria' }}{{ $item->creditCard ? ' · '.$item->creditCard->name : '' }}</p></div>@empty<p class="py-8 text-center text-sm text-slate-400">Nenhum lançamento próximo.</p>@endforelse</div></article></section></div>
+<div class="dashboard-page">
+    <div class="dashboard-heading">
+        <div><p class="eyebrow">{{ now()->translatedFormat('F \d\e Y') }}</p><h1>Olá, {{ explode(' ', auth()->user()->name)[0] }}!</h1><p>Acompanhe sua vida financeira em um só lugar.</p></div>
+        <a wire:navigate href="{{ route('transactions') }}" class="btn-primary">+ Nova transação</a>
+    </div>
+
+    <div class="dashboard-layout">
+        <section class="dashboard-main">
+            <div class="summary-grid">
+                <article class="metric-card"><div class="metric-icon income">↙</div><p>Receitas do mês</p><strong>R$ {{ number_format($income, 2, ',', '.') }}</strong><small><b class="positive">●</b> R$ {{ number_format($settledIncome, 2, ',', '.') }} recebidos</small></article>
+                <article class="metric-card"><div class="metric-icon expense">↗</div><p>Despesas do mês</p><strong>R$ {{ number_format($expense, 2, ',', '.') }}</strong><small><b class="negative">●</b> R$ {{ number_format($settledExpense, 2, ',', '.') }} pagos</small></article>
+                <article class="metric-card"><div class="metric-icon savings">▱</div><p>Saldo previsto</p><strong>R$ {{ number_format($income - $expense, 2, ',', '.') }}</strong><small><b class="positive">●</b> considerando pendências</small></article>
+            </div>
+
+            <article class="panel chart-panel">
+                <div class="panel-title"><div><p>Visão financeira</p><h2>Ganhos ao longo do ano</h2></div><span class="period-select">Este ano⌄</span></div>
+                @php($max = max(1, $months->max('income'), $months->max('expense')))
+                <div class="chart-key"><span><i class="bg-emerald-500"></i>Receitas</span><span><i class="bg-slate-200"></i>Despesas</span></div>
+                <div class="bar-chart">
+                    @foreach($months as $month)
+                    <div class="chart-column" title="{{ $month['label'] }}: receitas R$ {{ number_format($month['income'], 2, ',', '.') }}, despesas R$ {{ number_format($month['expense'], 2, ',', '.') }}">
+                        <div class="chart-bars"><i class="bar-expense" style="height: {{ max(6, ($month['expense'] / $max) * 150) }}px"></i><i class="bar-income" style="height: {{ max(6, ($month['income'] / $max) * 150) }}px"></i></div>
+                        <span>{{ $month['label'] }}</span>
+                    </div>
+                    @endforeach
+                </div>
+            </article>
+
+            <article class="panel transactions-panel">
+                <div class="panel-title"><div><p>Movimentações recentes</p><h2>Histórico de transações</h2></div><a wire:navigate href="{{ route('transactions') }}" class="period-select">Ver todas →</a></div>
+                <div class="table-wrap"><table class="dashboard-table"><thead><tr><th>Transação</th><th>Data</th><th>Categoria</th><th>Valor</th><th>Status</th></tr></thead><tbody>
+                @forelse($recentTransactions as $transaction)<tr><td><b>{{ $transaction->description }}</b><small>{{ $transaction->merchant ?: ($transaction->account?->name ?? 'Lançamento financeiro') }}</small></td><td>{{ $transaction->due_date->format('d/m/Y') }}</td><td>{{ $transaction->category?->name ?? 'Sem categoria' }}</td><td class="{{ $transaction->type === 'income' ? 'amount-income' : 'amount-expense' }}">{{ $transaction->type === 'income' ? '+' : '-' }} R$ {{ number_format($transaction->amount, 2, ',', '.') }}</td><td><span class="status-pill {{ $transaction->status }}">{{ $transaction->status === 'settled' ? 'Confirmado' : 'Pendente' }}</span></td></tr>
+                @empty<tr><td colspan="5" class="empty-row">Ainda não há transações para exibir.</td></tr>@endforelse
+                </tbody></table></div>
+            </article>
+        </section>
+
+        <aside class="dashboard-side">
+            <article class="card-widget"><div class="side-heading"><h2>Meus cartões</h2><a wire:navigate href="{{ route('accounts') }}">+ Adicionar</a></div>
+                @if($primaryCard)<div class="credit-card" style="--card-color: {{ $primaryCard->color ?: '#77bb8b' }}"><span class="card-chip">◈</span><span class="card-wave">⌁</span><p>{{ $primaryCard->name }}</p><strong>{{ auth()->user()->name }}</strong><div><small>LIMITE</small><small>VENCIMENTO</small></div><div><b>R$ {{ number_format($primaryCard->limit, 2, ',', '.') }}</b><b>Dia {{ $primaryCard->due_day }}</b></div></div>
+                @else<div class="empty-card">Cadastre um cartão para acompanhar seu limite.</div>@endif
+                <a wire:navigate href="{{ route('accounts') }}" class="quick-action">▣ <span>Gerenciar cartões</span>→</a>
+            </article>
+            <article class="side-panel"><div class="side-heading"><h2>Limite disponível</h2><span>•••</span></div><p class="limit-value">R$ {{ number_format($totalCardLimit, 2, ',', '.') }}</p><p class="limit-subtitle">em limites de cartão cadastrados</p><div class="progress-track"><i></i></div></article>
+            <article class="side-panel"><div class="side-heading"><h2>Próximos lançamentos</h2><a wire:navigate href="{{ route('transactions') }}">Ver todos</a></div><div class="upcoming-list">@forelse($upcoming as $item)<div><span class="upcoming-dot {{ $item->type }}">{{ strtoupper(substr($item->description, 0, 1)) }}</span><p><b>{{ $item->description }}</b><small>{{ $item->due_date->format('d/m') }} · {{ $item->category?->name ?? 'Sem categoria' }}</small></p><strong class="{{ $item->type === 'income' ? 'amount-income' : 'amount-expense' }}">{{ $item->type === 'income' ? '+' : '-' }}R$ {{ number_format($item->amount, 2, ',', '.') }}</strong></div>@empty<p class="empty-copy">Nenhum lançamento pendente.</p>@endforelse</div></article>
+        </aside>
+    </div>
+</div>

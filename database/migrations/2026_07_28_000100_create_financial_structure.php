@@ -1,11 +1,92 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-return new class extends Migration { public function up(): void {
- Schema::create('categories', function(Blueprint $t){$t->id();$t->foreignId('user_id')->constrained()->cascadeOnDelete();$t->string('name');$t->string('type',10);$t->string('color',20)->default('emerald');$t->boolean('is_archived')->default(false);$t->timestamps();$t->unique(['user_id','name','type']);});
- Schema::create('financial_accounts', function(Blueprint $t){$t->id();$t->foreignId('user_id')->constrained()->cascadeOnDelete();$t->string('name');$t->string('type',20)->default('checking');$t->decimal('initial_balance',15,2)->default(0);$t->string('color',20)->default('emerald');$t->boolean('is_archived')->default(false);$t->timestamps();});
- Schema::create('credit_cards', function(Blueprint $t){$t->id();$t->foreignId('user_id')->constrained()->cascadeOnDelete();$t->string('name');$t->string('brand')->nullable();$t->unsignedTinyInteger('closing_day');$t->unsignedTinyInteger('due_day');$t->decimal('limit',15,2)->nullable();$t->string('color',20)->default('emerald');$t->boolean('is_archived')->default(false);$t->timestamps();});
- Schema::create('transaction_series', function(Blueprint $t){$t->id();$t->foreignId('user_id')->constrained()->cascadeOnDelete();$t->string('type',10);$t->decimal('amount',15,2);$t->string('description');$t->string('merchant')->nullable();$t->text('notes')->nullable();$t->foreignId('category_id')->nullable()->constrained()->nullOnDelete();$t->foreignId('financial_account_id')->nullable()->constrained()->nullOnDelete();$t->foreignId('credit_card_id')->nullable()->constrained()->nullOnDelete();$t->string('recurrence',15)->default('one_time');$t->date('starts_on');$t->date('ends_on')->nullable();$t->unsignedSmallInteger('installments')->nullable();$t->boolean('is_active')->default(true);$t->timestamps();});
- Schema::create('transaction_occurrences', function(Blueprint $t){$t->id();$t->foreignId('user_id')->constrained()->cascadeOnDelete();$t->foreignId('transaction_series_id')->nullable()->constrained()->cascadeOnDelete();$t->foreignId('category_id')->nullable()->constrained()->nullOnDelete();$t->foreignId('financial_account_id')->nullable()->constrained()->nullOnDelete();$t->foreignId('credit_card_id')->nullable()->constrained()->nullOnDelete();$t->string('type',10);$t->decimal('amount',15,2);$t->string('description');$t->string('merchant')->nullable();$t->text('notes')->nullable();$t->date('due_date');$t->date('competence_month');$t->string('status',12)->default('pending');$t->date('settled_at')->nullable();$t->unsignedSmallInteger('installment_number')->nullable();$t->timestamps();$t->unique(['transaction_series_id','due_date']);$t->index(['user_id','due_date']);});
-} public function down(): void { Schema::dropIfExists('transaction_occurrences');Schema::dropIfExists('transaction_series');Schema::dropIfExists('credit_cards');Schema::dropIfExists('financial_accounts');Schema::dropIfExists('categories');} };
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('categories', function (Blueprint $t) {
+            $t->id();
+            $t->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $t->string('name');
+            $t->string('type', 10);
+            $t->string('color', 20)->default('emerald');
+            $t->boolean('is_archived')->default(false);
+            $t->timestamps();
+            $t->unique(['user_id', 'name', 'type']);
+        });
+        Schema::create('financial_accounts', function (Blueprint $t) {
+            $t->id();
+            $t->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $t->string('name');
+            $t->string('type', 20)->default('checking');
+            $t->decimal('initial_balance', 15, 2)->default(0);
+            $t->string('color', 20)->default('emerald');
+            $t->boolean('is_archived')->default(false);
+            $t->timestamps();
+        });
+        Schema::create('credit_cards', function (Blueprint $t) {
+            $t->id();
+            $t->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $t->string('name');
+            $t->string('brand')->nullable();
+            $t->unsignedTinyInteger('closing_day');
+            $t->unsignedTinyInteger('due_day');
+            $t->decimal('limit', 15, 2)->nullable();
+            $t->string('color', 20)->default('emerald');
+            $t->boolean('is_archived')->default(false);
+            $t->timestamps();
+        });
+        Schema::create('transaction_series', function (Blueprint $t) {
+            $t->id();
+            $t->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $t->string('type', 10);
+            $t->decimal('amount', 15, 2);
+            $t->string('description');
+            $t->string('merchant')->nullable();
+            $t->text('notes')->nullable();
+            $t->foreignId('category_id')->nullable()->constrained()->nullOnDelete();
+            $t->foreignId('financial_account_id')->nullable()->constrained()->nullOnDelete();
+            $t->foreignId('credit_card_id')->nullable()->constrained()->nullOnDelete();
+            $t->string('recurrence', 15)->default('one_time');
+            $t->date('starts_on');
+            $t->date('ends_on')->nullable();
+            $t->unsignedSmallInteger('installments')->nullable();
+            $t->boolean('is_active')->default(true);
+            $t->timestamps();
+        });
+        Schema::create('transaction_occurrences', function (Blueprint $t) {
+            $t->id();
+            $t->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $t->foreignId('transaction_series_id')->nullable()->constrained()->cascadeOnDelete();
+            $t->foreignId('category_id')->nullable()->constrained()->nullOnDelete();
+            $t->foreignId('financial_account_id')->nullable()->constrained()->nullOnDelete();
+            $t->foreignId('credit_card_id')->nullable()->constrained()->nullOnDelete();
+            $t->string('type', 10);
+            $t->decimal('amount', 15, 2);
+            $t->string('description');
+            $t->string('merchant')->nullable();
+            $t->text('notes')->nullable();
+            $t->date('due_date');
+            $t->date('competence_month');
+            $t->string('status', 12)->default('pending');
+            $t->date('settled_at')->nullable();
+            $t->unsignedSmallInteger('installment_number')->nullable();
+            $t->timestamps();
+            $t->unique(['transaction_series_id', 'due_date']);
+            $t->index(['user_id', 'due_date']);
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('transaction_occurrences');
+        Schema::dropIfExists('transaction_series');
+        Schema::dropIfExists('credit_cards');
+        Schema::dropIfExists('financial_accounts');
+        Schema::dropIfExists('categories');
+    }
+};

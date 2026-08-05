@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 620" fill="none">
+  <defs>
+    <linearGradient id="card" x1="225" y1="147" x2="509" y2="430" gradientUnits="userSpaceOnUse"><stop stop-color="#E9FAED"/><stop offset="1" stop-color="#BDEAC9"/></linearGradient>
+    <linearGradient id="chart" x1="135" y1="391" x2="578" y2="180" gradientUnits="userSpaceOnUse"><stop stop-color="#62AD76"/><stop offset="1" stop-color="#BDEAC9"/></linearGradient>
+  </defs>
+  <circle cx="586" cy="118" r="145" fill="#fff" fill-opacity=".32"/><circle cx="119" cy="517" r="128" fill="#fff" fill-opacity=".28"/>
+  <path d="M42 515c91-61 128 20 211-36 79-53 129-115 218-73 88 41 126-24 218-53" stroke="#8DCCA0" stroke-width="3" stroke-dasharray="10 12" opacity=".7"/>
+  <rect x="139" y="135" width="426" height="286" rx="31" fill="url(#card)" stroke="#fff" stroke-width="9" transform="rotate(-7 139 135)"/>
+  <rect x="163" y="163" width="377" height="94" rx="17" fill="#fff" fill-opacity=".76" transform="rotate(-7 163 163)"/>
+  <circle cx="204" cy="209" r="24" fill="#62AD76"/><path d="m196 209 6 6 12-15" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M247 195h117M247 217h72" stroke="#B2DDBD" stroke-width="10" stroke-linecap="round"/>
+  <path d="M188 347h31v-44h31v44h31v-76h31v76h31v-119h31v119h31v-61h31v61h31" stroke="url(#chart)" stroke-width="20" stroke-linejoin="round"/>
+  <path d="m172 377 90-86 76 35 87-127 69 30" stroke="#3D9B5B" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="172" cy="377" r="10" fill="#3D9B5B"/><circle cx="262" cy="291" r="10" fill="#3D9B5B"/><circle cx="338" cy="326" r="10" fill="#3D9B5B"/><circle cx="425" cy="199" r="10" fill="#3D9B5B"/><circle cx="494" cy="229" r="10" fill="#3D9B5B"/>
+  <g transform="translate(500 49)"><circle cx="48" cy="48" r="47" fill="#fff" fill-opacity=".88"/><path d="M48 21v54M29 40h38M30 60h36" stroke="#62AD76" stroke-width="7" stroke-linecap="round"/><path d="M39 22c-15 17-15 39 0 53M57 22c15 17 15 39 0 53" stroke="#62AD76" stroke-width="5" stroke-linecap="round"/></g>
+  <g transform="translate(79 390)"><rect width="117" height="89" rx="18" fill="#fff"/><rect x="18" y="21" width="38" height="7" rx="3.5" fill="#BDEAC9"/><rect x="18" y="39" width="78" height="7" rx="3.5" fill="#E0F3E5"/><circle cx="89" cy="25" r="12" fill="#62AD76"/></g>
+  <g transform="translate(510 416)"><path d="M45 0 56 29l29 11-29 11-11 29-11-29L16 40l29-11L45 0Z" fill="#62AD76"/><circle cx="45" cy="40" r="9" fill="#fff"/></g>
+</svg>

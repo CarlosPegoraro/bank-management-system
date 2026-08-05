@@ -18,10 +18,13 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        User::query()->firstOrCreate(['email' => 'admin@example.com'], [
+            'name' => 'Admin Test User',
+            'email' => 'admin@example.com',
             'password' => Hash::make('password'),
         ]);
+
+        $this->call(CategorySeeder::class);
+        $this->call(FinancialDemoSeeder::class);
     }
 }

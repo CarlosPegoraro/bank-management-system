@@ -1,1 +1,22 @@
-<main class="grid min-h-screen place-items-center p-5"><section class="w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl shadow-emerald-950/30"><span class="grid size-11 place-items-center rounded-2xl bg-emerald-500 font-bold text-emerald-950">V</span><h1 class="mt-5 text-2xl font-semibold">Comece com leveza.</h1><p class="mt-1 mb-7 text-sm text-slate-500">Organize cada entrada e saída em um só lugar.</p><form wire:submit="register" class="space-y-4"><label class="field">Nome<input wire:model="name" type="text"></label><label class="field">E-mail<input wire:model="email" type="email"></label><label class="field">Senha<input wire:model="password" type="password"></label><label class="field">Confirmar senha<input wire:model="password_confirmation" type="password"></label>@if($errors->any())<p class="text-sm text-rose-600">Revise os campos informados.</p>@endif<button class="btn-primary w-full">Criar minha conta</button></form><p class="mt-6 text-center text-sm text-slate-500">Já possui uma conta? <a wire:navigate class="font-medium text-emerald-700" href="{{ route('login') }}">Entrar</a></p></section></main>
+<main class="auth-wrap">
+    <section class="auth-card">
+        <div class="auth-form-pane">
+            <a wire:navigate href="{{ route('dashboard') }}" class="auth-logo"><img src="{{ asset('logo.svg') }}" alt="Cadê o Meu Dinheiro?"></a>
+            <div class="auth-intro"><p class="eyebrow">COMECE AGORA</p><h1>Uma vida financeira<br>mais leve começa aqui.</h1><p>Crie sua conta grátis e dê mais clareza às suas decisões.</p></div>
+            <form wire:submit="register" class="auth-form">
+                <label class="auth-field">Nome completo<input wire:model="name" type="text" autocomplete="name" placeholder="Como podemos te chamar?"></label>
+                <label class="auth-field">E-mail<input wire:model="email" type="email" autocomplete="email" placeholder="voce@exemplo.com"></label>
+                <label class="auth-field">Senha<input wire:model="password" type="password" autocomplete="new-password" placeholder="Crie uma senha"></label>
+                <label class="auth-field">Confirmar senha<input wire:model="password_confirmation" type="password" autocomplete="new-password" placeholder="Repita sua senha"></label>
+                @if($errors->any())<p class="text-sm text-rose-600">Revise os campos informados.</p>@endif
+                <button class="auth-submit">Criar minha conta <span>→</span></button>
+            </form>
+            <p class="auth-switch">Já possui uma conta? <a wire:navigate href="{{ route('login') }}">Entrar</a></p>
+        </div>
+        <div class="auth-art-pane">
+            <div class="auth-art-copy"><span>✦</span><p>Organize hoje.<br><b>Realize amanhã.</b></p></div>
+            <img src="{{ asset('images/finance-auth-illustration.svg') }}" alt="Ilustração de organização financeira" class="auth-art">
+            <p class="auth-art-footer">Planejamento para chegar mais longe.</p>
+        </div>
+    </section>
+</main>

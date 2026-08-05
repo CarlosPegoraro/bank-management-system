@@ -1,0 +1,14 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app
+        - database
+        - routes
+
+    level: 5
+
+    # O Laravel é carregado pelo Larastan antes da análise.
+    bootstrapFiles:
+        - bootstrap/app.php

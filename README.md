@@ -1,4 +1,4 @@
-# Verde Finanças
+# Cadê o Meu Dinheiro?
 
 Sistema pessoal de gestão financeira feito com Laravel, Livewire, Tailwind CSS e PostgreSQL.
 
@@ -16,7 +16,14 @@ Sistema pessoal de gestão financeira feito com Laravel, Livewire, Tailwind CSS 
 3. Gere a chave e as tabelas: `php artisan key:generate && php artisan migrate`.
 4. Inicie o ambiente: `composer run dev`.
 
-Para validar: `php artisan test` e `npm run build`.
+Para validar localmente:
+
+```bash
+composer test
+composer analyse
+composer pint:check
+npm run build
+```
 
 ## Docker
 
@@ -27,6 +34,18 @@ docker compose -f docker/compose.yaml up --build
 ```
 
 Aplicação: `http://localhost:5101`; Vite: `http://localhost:5102`; PostgreSQL: porta `5433`.
+
+### Testes E2E
+
+O Playwright é executado em um container dedicado, isolado das dependências Node
+usadas pelo Vite. Com os serviços de desenvolvimento ativos, execute:
+
+```bash
+docker compose -f docker/compose.yaml --profile e2e run --rm playwright
+```
+
+O container usa `http://app:8000` na rede Docker; fora dele, `npm run test:e2e`
+usa `http://localhost:5101` por padrão.
 
 Para produção, crie `docker/.env` a partir de `docker/.env.example`, defina domínio, `APP_KEY` e senha do banco. Em seguida execute:
 
