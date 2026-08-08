@@ -3,6 +3,8 @@
 namespace App\Livewire\Auth;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class Login extends Component
@@ -16,11 +18,21 @@ class Login extends Component
     public function login()
     {
         $data = $this->validate(['email' => ['required', 'email'], 'password' => ['required']]);
+        $key = Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+        if (RateLimiter::tooManyAttempts($key, 5)) {
+            $this->addError('email', 'Muitas tentativas. Aguarde um minuto e tente novamente.');
+
+            return;
+        }
+
         if (! Auth::attempt($data, $this->remember)) {
+            RateLimiter::hit($key, 60);
             $this->addError('email', 'E-mail ou senha inválidos.');
 
             return;
-        } request()->session()->regenerate();
+        }
+        RateLimiter::clear($key);
+        request()->session()->regenerate();
 
         return $this->redirectRoute('dashboard', navigate: true);
     }

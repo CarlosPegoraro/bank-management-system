@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'api_ninjas' => [
+        'key' => env('API_NINJAS_API_KEY'),
+        'bin_url' => env('API_NINJAS_BIN_URL', 'https://api.api-ninjas.com/v2/bin'),
+        'monthly_limit' => (int) env('API_NINJAS_MONTHLY_LIMIT', 9500),
+    ],
+
 ];

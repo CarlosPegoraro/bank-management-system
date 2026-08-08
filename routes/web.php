@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\TransactionExportController;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
+use App\Livewire\BudgetsAndGoalsPage;
 use App\Livewire\CategoriesPage;
 use App\Livewire\Dashboard;
 use App\Livewire\FinancialAccountsPage;
@@ -24,7 +26,9 @@ Route::post('/logout', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/transactions', TransactionsPage::class)->name('transactions');
+    Route::get('/transactions/export', TransactionExportController::class)->name('transactions.export');
     Route::get('/accounts-and-cards', FinancialAccountsPage::class)->name('accounts');
     Route::get('/categories', CategoriesPage::class)->name('categories');
+    Route::get('/budgets-and-goals', BudgetsAndGoalsPage::class)->name('budgets');
     Route::get('/profile', ProfileSettings::class)->name('profile');
 });

@@ -11,11 +11,11 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TransactionSeries extends Model
 {
-    protected $fillable = ['type', 'amount', 'description', 'merchant', 'notes', 'category_id', 'financial_account_id', 'credit_card_id', 'recurrence', 'starts_on', 'ends_on', 'installments', 'is_active'];
+    protected $fillable = ['type', 'amount', 'description', 'merchant', 'notes', 'category_id', 'financial_account_id', 'credit_card_id', 'recurrence', 'starts_on', 'purchase_date', 'ends_on', 'installments', 'is_active'];
 
     protected function casts(): array
     {
-        return ['amount' => 'decimal:2', 'starts_on' => 'date', 'ends_on' => 'date', 'is_active' => 'boolean'];
+        return ['amount' => 'decimal:2', 'starts_on' => 'date', 'purchase_date' => 'date', 'ends_on' => 'date', 'is_active' => 'boolean'];
     }
 
     public function user()

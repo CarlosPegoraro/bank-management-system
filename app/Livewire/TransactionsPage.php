@@ -2,34 +2,69 @@
 
 namespace App\Livewire;
 
-use App\Services\RecurrenceService;
-use Carbon\Carbon;
+use App\Services\TransactionImportService;
+use App\Services\TransactionService;
+use Illuminate\Validation\Rule;
+use Livewire\Attributes\Url;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 class TransactionsPage extends Component
 {
+    use WithFileUploads;
     use WithPagination;
 
+    #[Url(except: '')]
     public string $type = '';
 
+    #[Url(except: '')]
     public string $status = '';
 
+    #[Url(as: 'q', except: '')]
     public string $search = '';
 
+    #[Url(except: '')]
     public string $dateFrom = '';
 
+    #[Url(except: '')]
     public string $dateTo = '';
 
     public bool $showForm = false;
 
     public array $form = [];
 
+    public array $editForm = [];
+
+    public bool $showEditForm = false;
+
+    public ?int $editingId = null;
+
+    public string $editScope = 'occurrence';
+
+    public bool $editingSeriesAvailable = false;
+
+    public string $successMessage = '';
+
+    public bool $showImportForm = false;
+
+    public $importFile;
+
+    public array $importHeaders = [];
+
+    public array $importRows = [];
+
+    public array $importMapping = [];
+
+    public array $importFields = [];
+
     public function mount()
     {
-        $this->dateFrom = now()->startOfMonth()->toDateString();
-        $this->dateTo = now()->endOfMonth()->toDateString();
+        $this->search = $this->search ?: request()->string('search')->toString();
+        $this->dateFrom = $this->dateFrom ?: now()->startOfMonth()->toDateString();
+        $this->dateTo = $this->dateTo ?: now()->endOfMonth()->toDateString();
         $this->resetForm();
+        $this->importFields = TransactionImportService::FIELDS;
     }
 
     public function resetForm()
@@ -40,12 +75,14 @@ class TransactionsPage extends Component
     public function openForm()
     {
         $this->resetForm();
+        $this->resetValidation();
+        $this->successMessage = '';
         $this->showForm = true;
     }
 
-    public function save(RecurrenceService $service)
+    public function save(TransactionService $service)
     {
-        $d = $this->validate(['form.type' => 'required|in:income,expense', 'form.amount' => 'required|numeric|min:0.01', 'form.description' => 'required|max:255', 'form.merchant' => 'nullable|max:255', 'form.category_id' => 'nullable|exists:categories,id', 'form.financial_account_id' => 'nullable|exists:financial_accounts,id', 'form.credit_card_id' => 'nullable|exists:credit_cards,id', 'form.due_date' => 'required|date', 'form.recurrence' => 'required|in:one_time,monthly,installment', 'form.installments' => 'nullable|required_if:form.recurrence,installment|integer|min:2|max:360', 'form.notes' => 'nullable|max:2000']);
+        $d = $this->validate($this->transactionRules('form'));
         $f = $d['form'];
         foreach (['category_id', 'financial_account_id', 'credit_card_id'] as $field) {
             $f[$field] = filled($f[$field]) ? (int) $f[$field] : null;
@@ -55,36 +92,225 @@ class TransactionsPage extends Component
             abort(403);
         } if ($f['credit_card_id'] && ! auth()->user()->creditCards()->whereKey($f['credit_card_id'])->exists()) {
             abort(403);
-        } if ($f['credit_card_id']) {
-            $card = auth()->user()->creditCards()->findOrFail($f['credit_card_id']);
-            $purchase = Carbon::parse($f['due_date']);
-            $cycle = $purchase->copy()->startOfMonth();
-            if ($purchase->day > $card->closing_day) {
-                $cycle->addMonth();
-            } $due = $cycle->copy()->day(min($card->due_day, $cycle->daysInMonth));
-            if ($due->lt($purchase)) {
-                $due->addMonth();
-            } $f['due_date'] = $due->toDateString();
-        } $end = $f['recurrence'] === 'installment' ? Carbon::parse($f['due_date'])->addMonths(((int) $f['installments']) - 1) : null;
-        $series = auth()->user()->transactionSeries()->create(array_merge($f, ['starts_on' => $f['due_date'], 'ends_on' => $end, 'installments' => $f['recurrence'] === 'installment' ? $f['installments'] : null]));
-        $service->materialize($series);
-        $this->showForm = false;
-    }
-
-    public function settle($id)
-    {
-        auth()->user()->transactions()->findOrFail($id)->update(['status' => 'settled', 'settled_at' => today()]);
-    }
-
-    public function cancelFuture($id)
-    {
-        $t = auth()->user()->transactions()->findOrFail($id);
-        if ($t->transaction_series_id) {
-            $t->series->update(['is_active' => false, 'ends_on' => $t->due_date->copy()->subDay()]);
-            auth()->user()->transactions()->where('transaction_series_id', $t->transaction_series_id)->where('status', 'pending')->whereDate('due_date', '>=', $t->due_date)->delete();
-        } else {
-            $t->delete();
         }
+
+        $f['purchase_date'] = $f['due_date'];
+        $service->create(auth()->user(), $f);
+        $this->showForm = false;
+        $this->successMessage = 'Lançamento criado com sucesso.';
+    }
+
+    public function openEdit($id)
+    {
+        $transaction = $this->transaction($id);
+        $this->editingId = $transaction->id;
+        $this->editScope = 'occurrence';
+        $this->editingSeriesAvailable = (bool) $transaction->series && $transaction->series->recurrence !== 'one_time';
+        $this->editForm = [
+            'type' => $transaction->type,
+            'amount' => (string) $transaction->amount,
+            'description' => $transaction->description,
+            'merchant' => $transaction->merchant ?? '',
+            'category_id' => (string) ($transaction->category_id ?? ''),
+            'financial_account_id' => (string) ($transaction->financial_account_id ?? ''),
+            'credit_card_id' => (string) ($transaction->credit_card_id ?? ''),
+            'purchase_date' => ($transaction->purchase_date ?? $transaction->due_date)->toDateString(),
+            'due_date' => $transaction->due_date->toDateString(),
+            'status' => $transaction->status,
+            'settled_at' => $transaction->settled_at?->toDateString() ?? '',
+            'notes' => $transaction->notes ?? '',
+        ];
+        $this->showEditForm = true;
+        $this->resetValidation();
+    }
+
+    public function saveEdit(TransactionService $service)
+    {
+        $rules = [
+            'editForm.type' => 'required|in:income,expense',
+            'editForm.amount' => 'required|numeric|min:0.01',
+            'editForm.description' => 'required|max:255',
+            'editForm.merchant' => 'nullable|max:255',
+            ...$this->transactionRules('editForm'),
+            'editForm.purchase_date' => 'required|date',
+            'editForm.notes' => 'nullable|max:2000',
+        ];
+
+        if ($this->editScope === 'occurrence') {
+            $rules += [
+                'editForm.due_date' => 'required|date',
+                'editForm.status' => 'required|in:pending,settled,canceled',
+                'editForm.settled_at' => 'nullable|date',
+            ];
+        }
+
+        $data = $this->validate($rules)['editForm'];
+        foreach (['category_id', 'financial_account_id', 'credit_card_id'] as $field) {
+            $data[$field] = filled($data[$field] ?? null) ? (int) $data[$field] : null;
+        }
+
+        $transaction = $this->transaction($this->editingId);
+        $this->assertOwnedReferences($data);
+
+        if ($this->editScope === 'series' && $transaction->series) {
+            $service->updateSeries($transaction, $data);
+        } else {
+            $service->updateOccurrence($transaction, $data);
+        }
+
+        $this->closeEdit();
+        $this->successMessage = 'Lançamento atualizado com sucesso.';
+    }
+
+    public function duplicate($id, TransactionService $service)
+    {
+        $service->duplicate($this->transaction($id));
+        $this->successMessage = 'Lançamento duplicado com sucesso.';
+    }
+
+    public function settle($id, TransactionService $service)
+    {
+        $service->toggleSettled($this->transaction($id));
+        $this->successMessage = 'Status do lançamento atualizado.';
+    }
+
+    public function cancel($id, TransactionService $service)
+    {
+        $service->cancel($this->transaction($id));
+        $this->successMessage = 'Lançamento cancelado.';
+    }
+
+    public function cancelFuture($id, TransactionService $service)
+    {
+        $service->cancelFuture($this->transaction($id));
+        $this->successMessage = 'Série interrompida a partir deste lançamento.';
+    }
+
+    public function delete($id, TransactionService $service)
+    {
+        $service->deleteOccurrence($this->transaction($id));
+        $this->successMessage = 'Lançamento excluído.';
+    }
+
+    public function closeEdit(): void
+    {
+        $this->showEditForm = false;
+        $this->editingId = null;
+        $this->editForm = [];
+        $this->editingSeriesAvailable = false;
+    }
+
+    public function setPeriod(string $period): void
+    {
+        $range = match ($period) {
+            'today' => [today(), today()],
+            'next_month' => [now()->addMonthNoOverflow()->startOfMonth(), now()->addMonthNoOverflow()->endOfMonth()],
+            default => [now()->startOfMonth(), now()->endOfMonth()],
+        };
+        [$this->dateFrom, $this->dateTo] = array_map(fn ($date) => $date->toDateString(), $range);
+        $this->resetPage();
+    }
+
+    public function clearFilters(): void
+    {
+        $this->type = '';
+        $this->status = '';
+        $this->search = '';
+        $this->setPeriod('month');
+    }
+
+    public function openImport(): void
+    {
+        $this->resetImport();
+        $this->resetValidation();
+        $this->showImportForm = true;
+    }
+
+    public function updatedImportFile(TransactionImportService $service): void
+    {
+        if (! $this->importFile) {
+            return;
+        }
+
+        $this->validate(['importFile' => 'required|file|mimes:csv,txt|max:5120']);
+        $preview = $service->preview($this->importFile);
+        $this->importHeaders = $preview['headers'];
+        $this->importRows = $preview['rows'];
+        $this->importMapping = $preview['mapping'];
+    }
+
+    public function confirmImport(TransactionImportService $service): void
+    {
+        $this->validate([
+            'importFile' => 'required|file|mimes:csv,txt|max:5120',
+            'importMapping.amount' => 'required',
+            'importMapping.description' => 'required',
+            'importMapping.due_date' => 'required',
+        ]);
+        if ($this->importRows === []) {
+            $this->addError('importFile', 'Selecione um CSV com pelo menos uma linha.');
+
+            return;
+        }
+
+        $created = $service->import(auth()->user(), $this->importHeaders, $this->importRows, $this->importMapping);
+        $this->resetImport();
+        $this->showImportForm = false;
+        $this->successMessage = "{$created} lançamento(s) importado(s) com sucesso.";
+    }
+
+    public function resetImport(): void
+    {
+        $this->importFile = null;
+        $this->importHeaders = [];
+        $this->importRows = [];
+        $this->importMapping = [];
+    }
+
+    private function transaction($id)
+    {
+        return auth()->user()->transactions()->with('series')->findOrFail($id);
+    }
+
+    private function assertOwnedReferences(array $data): void
+    {
+        foreach (['category_id' => 'categories', 'financial_account_id' => 'accounts', 'credit_card_id' => 'creditCards'] as $field => $relation) {
+            if ($data[$field] ?? null) {
+                if (! auth()->user()->{$relation}()->whereKey($data[$field])->exists()) {
+                    abort(403);
+                }
+            }
+        }
+    }
+
+    /** @return array<string, mixed> */
+    private function transactionRules(string $prefix): array
+    {
+        return [
+            "$prefix.type" => 'required|in:income,expense',
+            "$prefix.amount" => 'required|numeric|min:0.01',
+            "$prefix.description" => 'required|max:255',
+            "$prefix.merchant" => 'nullable|max:255',
+            "$prefix.category_id" => [
+                'nullable',
+                Rule::exists('categories', 'id')->where(fn ($query) => $query->where('user_id', auth()->id())->where('type', data_get($this, "$prefix.type"))),
+            ],
+            "$prefix.financial_account_id" => [
+                'nullable',
+                Rule::exists('financial_accounts', 'id')->where(fn ($query) => $query->where('user_id', auth()->id())),
+            ],
+            "$prefix.credit_card_id" => [
+                'nullable',
+                Rule::exists('credit_cards', 'id')->where(fn ($query) => $query->where('user_id', auth()->id())),
+            ],
+            "$prefix.notes" => 'nullable|max:2000',
+        ] + ($prefix === 'form'
+            ? [
+                "$prefix.due_date" => 'required|date',
+                "$prefix.recurrence" => 'required|in:one_time,monthly,installment',
+                "$prefix.installments" => 'nullable|required_if:form.recurrence,installment|integer|min:2|max:360',
+            ]
+            : []);
     }
 
     public function updated($field)

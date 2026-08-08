@@ -17,7 +17,8 @@ test('application URLs use English slugs', function () {
         ->and(route('logout', absolute: false))->toBe('/logout')
         ->and(route('transactions', absolute: false))->toBe('/transactions')
         ->and(route('accounts', absolute: false))->toBe('/accounts-and-cards')
-        ->and(route('categories', absolute: false))->toBe('/categories');
+        ->and(route('categories', absolute: false))->toBe('/categories')
+        ->and(route('budgets', absolute: false))->toBe('/budgets-and-goals');
 });
 
 test('an authenticated user can open dashboard', function () {
@@ -41,11 +42,13 @@ test('registration creates default categories for the user', function () {
 
 test('an authenticated user can save a credit card', function () {
     $user = User::factory()->create();
+    $account = $user->accounts()->create(['name' => 'Conta do cartão', 'type' => 'checking', 'initial_balance' => 0]);
 
     Livewire::actingAs($user)
         ->test(FinancialAccountsPage::class)
         ->set('card.name', 'Cartão principal')
         ->set('card.brand', 'Visa')
+        ->set('card.financial_account_id', $account->id)
         ->set('card.closing_day', 10)
         ->set('card.due_day', '05')
         ->set('card.limit', 2500)
@@ -57,5 +60,26 @@ test('an authenticated user can save a credit card', function () {
         'name' => 'Cartão principal',
         'closing_day' => 10,
         'due_day' => 5,
+        'financial_account_id' => $account->id,
+    ]);
+});
+
+test('an authenticated user can save a credit card without a limit', function () {
+    $user = User::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test(FinancialAccountsPage::class)
+        ->set('card.name', 'Cartão sem limite')
+        ->set('card.brand', 'Hipercard')
+        ->set('card.closing_day', 5)
+        ->set('card.due_day', 27)
+        ->set('card.limit', '')
+        ->call('saveCard')
+        ->assertHasNoErrors();
+
+    $this->assertDatabaseHas('credit_cards', [
+        'user_id' => $user->id,
+        'name' => 'Cartão sem limite',
+        'limit' => null,
     ]);
 });

@@ -17,6 +17,31 @@ services:
       DB_DATABASE: comd
       DB_USERNAME: comd
       DB_PASSWORD: comd
+      API_NINJAS_API_KEY: ${API_NINJAS_API_KEY:-}
+      API_NINJAS_BIN_URL: ${API_NINJAS_BIN_URL:-https://api.api-ninjas.com/v2/bin}
+      API_NINJAS_MONTHLY_LIMIT: ${API_NINJAS_MONTHLY_LIMIT:-9500}
+    depends_on:
+      database:
+        condition: service_healthy
+
+  scheduler:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    command: php artisan schedule:work
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: http://localhost:5101
+      DB_CONNECTION: pgsql
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_DATABASE: comd
+      DB_USERNAME: comd
+      DB_PASSWORD: comd
+      API_NINJAS_API_KEY: ${API_NINJAS_API_KEY:-}
+      API_NINJAS_BIN_URL: ${API_NINJAS_BIN_URL:-https://api.api-ninjas.com/v2/bin}
+      API_NINJAS_MONTHLY_LIMIT: ${API_NINJAS_MONTHLY_LIMIT:-9500}
     depends_on:
       database:
         condition: service_healthy

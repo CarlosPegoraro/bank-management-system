@@ -2,9 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Livewire\Dashboard;
 use App\Models\User;
 use App\Services\RecurrenceService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Artisan;
+use Livewire\Livewire;
 
 test('installments create one occurrence per month', function () {
     $user = User::factory()->create();
@@ -20,4 +23,56 @@ test('installments create one occurrence per month', function () {
 
     expect($user->transactions()->count())->toBe(3)
         ->and($user->transactions()->orderBy('due_date')->pluck('installment_number')->all())->toBe([1, 2, 3]);
+});
+
+test('the materialization command projects active series using the configured window', function () {
+    Carbon::setTestNow(Carbon::parse('2026-08-07 10:00:00'));
+
+    try {
+        config()->set('recurrence.materialization_months', 1);
+        $user = User::factory()->create();
+        $user->transactionSeries()->create([
+            'type' => 'expense', 'amount' => 80, 'description' => 'Streaming',
+            'recurrence' => 'monthly', 'starts_on' => '2026-08-01',
+        ]);
+
+        Artisan::call('transactions:materialize');
+
+        expect($user->transactions()->count())->toBe(2)
+            ->and(Artisan::output())->toContain('2 ocorrência(s) criada(s)');
+    } finally {
+        Carbon::setTestNow();
+    }
+});
+
+test('the materialization command accepts an explicit limit and is idempotent', function () {
+    Carbon::setTestNow(Carbon::parse('2026-08-07 10:00:00'));
+
+    try {
+        $user = User::factory()->create();
+        $user->transactionSeries()->create([
+            'type' => 'income', 'amount' => 500, 'description' => 'Consultoria',
+            'recurrence' => 'monthly', 'starts_on' => '2026-08-01',
+        ]);
+
+        Artisan::call('transactions:materialize', ['--until' => '2026-10-31']);
+        Artisan::call('transactions:materialize', ['--until' => '2026-10-31']);
+
+        expect($user->transactions()->count())->toBe(3)
+            ->and(Artisan::output())->toContain('0 ocorrência(s) criada(s)');
+    } finally {
+        Carbon::setTestNow();
+    }
+});
+
+test('the dashboard does not materialize recurring series while rendering', function () {
+    $user = User::factory()->create();
+    $user->transactionSeries()->create([
+        'type' => 'expense', 'amount' => 80, 'description' => 'Streaming',
+        'recurrence' => 'monthly', 'starts_on' => now()->startOfMonth(),
+    ]);
+
+    Livewire::actingAs($user)->test(Dashboard::class)->assertOk();
+
+    expect($user->transactions()->count())->toBe(0);
 });

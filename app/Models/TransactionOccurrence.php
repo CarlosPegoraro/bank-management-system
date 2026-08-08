@@ -2,15 +2,23 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property Carbon $due_date
+ * @property Carbon|null $purchase_date
+ * @property Carbon|null $settled_at
+ * @property User $user
+ * @property TransactionSeries|null $series
+ */
 class TransactionOccurrence extends Model
 {
-    protected $fillable = ['user_id', 'transaction_series_id', 'category_id', 'financial_account_id', 'credit_card_id', 'type', 'amount', 'description', 'merchant', 'notes', 'due_date', 'competence_month', 'status', 'settled_at', 'installment_number'];
+    protected $fillable = ['user_id', 'transaction_series_id', 'category_id', 'financial_account_id', 'credit_card_id', 'type', 'amount', 'description', 'merchant', 'notes', 'due_date', 'purchase_date', 'competence_month', 'status', 'settled_at', 'installment_number'];
 
     protected function casts(): array
     {
-        return ['amount' => 'decimal:2', 'due_date' => 'date', 'competence_month' => 'date', 'settled_at' => 'date'];
+        return ['amount' => 'decimal:2', 'due_date' => 'date', 'purchase_date' => 'date', 'competence_month' => 'date', 'settled_at' => 'date'];
     }
 
     public function user()

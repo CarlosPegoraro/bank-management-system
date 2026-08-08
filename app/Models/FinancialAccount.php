@@ -17,4 +17,19 @@ class FinancialAccount extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function transactions()
+    {
+        return $this->hasMany(TransactionOccurrence::class, 'financial_account_id');
+    }
+
+    public function outgoingTransfers()
+    {
+        return $this->hasMany(Transfer::class, 'from_account_id');
+    }
+
+    public function incomingTransfers()
+    {
+        return $this->hasMany(Transfer::class, 'to_account_id');
+    }
 }
