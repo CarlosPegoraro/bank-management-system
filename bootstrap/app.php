@@ -18,7 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
             ->withoutOverlapping();
     })
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
