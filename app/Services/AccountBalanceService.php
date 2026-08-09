@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\FinancialAccount;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 class AccountBalanceService
@@ -11,9 +12,12 @@ class AccountBalanceService
     /**
      * @return array<string, float>
      */
-    public function summarize(FinancialAccount $account): array
+    public function summarize(FinancialAccount $account, ?Carbon $asOf = null): array
     {
         $transactions = $account->transactions()->where('status', '!=', 'canceled');
+        if ($asOf) {
+            $transactions->whereDate('due_date', '<=', $asOf);
+        }
         $settled = (clone $transactions)->where('status', 'settled');
         $pending = (clone $transactions)->where('status', 'pending');
 
@@ -23,6 +27,10 @@ class AccountBalanceService
         $pendingExpense = (float) (clone $pending)->where('type', 'expense')->sum('amount');
         $transfersIn = $account->incomingTransfers()->where('status', '!=', 'canceled');
         $transfersOut = $account->outgoingTransfers()->where('status', '!=', 'canceled');
+        if ($asOf) {
+            $transfersIn->whereDate('transfer_date', '<=', $asOf);
+            $transfersOut->whereDate('transfer_date', '<=', $asOf);
+        }
         $settledTransferIn = (float) (clone $transfersIn)->where('status', 'settled')->sum('amount');
         $settledTransferOut = (float) (clone $transfersOut)->where('status', 'settled')->sum('amount');
         $pendingTransferIn = (float) (clone $transfersIn)->where('status', 'pending')->sum('amount');
@@ -74,5 +82,15 @@ class AccountBalanceService
                 'projected_balance' => (float) $summaries->sum('projected_balance'),
             ],
         ];
+    }
+
+    public function currentBalanceForUser(User $user, ?Carbon $asOf = null): float
+    {
+        $asOf ??= now();
+
+        return (float) $user->accounts()
+            ->where('is_archived', false)
+            ->get()
+            ->sum(fn (FinancialAccount $account): float => $this->summarize($account, $asOf)['realized_balance']);
     }
 }

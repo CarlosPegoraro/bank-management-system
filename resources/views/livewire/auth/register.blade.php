@@ -8,6 +8,8 @@
                 <label class="auth-field">E-mail<input wire:model="email" type="email" autocomplete="email" placeholder="voce@exemplo.com"></label>
                 <label class="auth-field">Senha<input wire:model="password" type="password" autocomplete="new-password" placeholder="Crie uma senha"></label>
                 <label class="auth-field">Confirmar senha<input wire:model="password_confirmation" type="password" autocomplete="new-password" placeholder="Repita sua senha"></label>
+                <label class="auth-terms"><input wire:model="terms_accepted" type="checkbox"><span>Li e aceito os <a href="{{ route('terms') }}" target="_blank" rel="noopener">Termos de Uso</a> e estou ciente da <a href="{{ route('terms') }}#privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.</span></label>
+                @error('terms_accepted')<p class="form-error">Você precisa aceitar os termos para criar sua conta.</p>@enderror
                 @if($errors->any())<p class="text-sm text-rose-600">Revise os campos informados.</p>@endif
                 <button class="auth-submit">Criar minha conta <span>→</span></button>
             </form>

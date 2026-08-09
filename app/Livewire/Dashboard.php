@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Services\AccountBalanceService;
 use App\Services\CreditCardBalanceService;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -34,7 +35,7 @@ class Dashboard extends Component
         }
     }
 
-    public function render(CreditCardBalanceService $cardBalances)
+    public function render(CreditCardBalanceService $cardBalances, AccountBalanceService $accountBalances)
     {
         [$start, $end] = $this->periodRange();
         [$comparisonStart, $comparisonEnd] = $this->comparisonRange($start, $end);
@@ -83,6 +84,7 @@ class Dashboard extends Component
         $cardUtilization = $cardConsolidated['limit'] > 0
             ? min(100, max(0, ($cardConsolidated['used_limit'] / $cardConsolidated['limit']) * 100))
             : 0;
+        $currentBalance = $accountBalances->currentBalanceForUser($user);
 
         return view('livewire.dashboard', [
             'start' => $start,
@@ -90,6 +92,7 @@ class Dashboard extends Component
             'periodLabel' => $this->periodLabel($start, $end),
             'income' => $income,
             'expense' => $expense,
+            'currentBalance' => $currentBalance,
             'settledIncome' => $settledIncome,
             'settledExpense' => $settledExpense,
             'incomeChange' => $this->percentageChange($income, $comparisonIncome),

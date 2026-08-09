@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', fn () => redirect()->route(Auth::check() ? 'dashboard' : 'login'));
 Route::get('/login', Login::class)->middleware('guest')->name('login');
 Route::get('/register', Register::class)->middleware('guest')->name('register');
+Route::view('/termos-de-uso', 'terms')->name('terms');
 Route::post('/logout', function () {
     Auth::logout();
     request()->session()->invalidate();

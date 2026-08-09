@@ -31,6 +31,7 @@ test('registration creates default categories for the user', function () {
         ->set('email', 'new@example.com')
         ->set('password', 'password')
         ->set('password_confirmation', 'password')
+        ->set('terms_accepted', true)
         ->call('register')
         ->assertHasNoErrors();
 
@@ -38,6 +39,20 @@ test('registration creates default categories for the user', function () {
 
     $this->assertDatabaseCount('categories', 10);
     expect($user->categories()->count())->toBe(10);
+    expect($user->terms_accepted_at)->not->toBeNull()
+        ->and($user->terms_version)->toBe('2026-08-09');
+});
+
+test('registration requires acceptance of the terms', function () {
+    Livewire::test(Register::class)
+        ->set('name', 'Without Terms')
+        ->set('email', 'without-terms@example.com')
+        ->set('password', 'password')
+        ->set('password_confirmation', 'password')
+        ->call('register')
+        ->assertHasErrors(['terms_accepted' => 'accepted']);
+
+    expect(User::where('email', 'without-terms@example.com')->exists())->toBeFalse();
 });
 
 test('an authenticated user can save a credit card', function () {
