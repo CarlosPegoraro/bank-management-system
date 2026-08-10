@@ -1,4 +1,4 @@
-# Cadê o Meu Dinheiro?
+# Cadim
 
 Sistema pessoal de gestão financeira feito com Laravel, Livewire, Tailwind CSS e PostgreSQL.
 

@@ -3,10 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Cadê o Meu Dinheiro?</title>
+    <title>Cadim</title>
     <script>
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') document.documentElement.dataset.theme = 'dark';
+        window.applySavedTheme = () => {
+            document.documentElement.dataset.theme = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
+        };
+
+        window.applySavedTheme();
 
         window.syncThemeToggle = () => {
             const dark = document.documentElement.dataset.theme === 'dark';
@@ -27,6 +30,12 @@
         };
 
         document.addEventListener('DOMContentLoaded', window.syncThemeToggle);
+        document.addEventListener('livewire:navigating', window.applySavedTheme);
+        document.addEventListener('livewire:navigated', () => {
+            window.applySavedTheme();
+            window.syncThemeToggle();
+        });
+        document.addEventListener('alpine:navigated', window.applySavedTheme);
     </script>
     <link rel="icon" type="image/svg+xml" href="{{ asset('logo.svg') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -84,7 +93,7 @@
     <div class="min-h-screen lg:flex">
         <aside class="app-sidebar">
             <a wire:navigate href="{{ route('dashboard') }}" class="brand">
-                <img src="{{ asset('logo.svg') }}" alt="Cadê o Meu Dinheiro?">
+                <img src="{{ asset('logo.svg') }}" alt="Cadim">
             </a>
             <nav class="app-nav">
                 <a wire:navigate href="{{ route('dashboard') }}" @class(['app-nav-link','is-active' => request()->routeIs('dashboard')])>Dashboard</a>

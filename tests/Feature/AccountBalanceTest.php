@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Livewire\FinancialAccountsPage;
 use App\Models\User;
 use App\Services\AccountBalanceService;
+use App\Services\TransferService;
 use Livewire\Livewire;
 
 test('an account exposes realized and projected balances', function () {
@@ -66,4 +67,22 @@ test('the accounts page displays consolidated balances for active accounts', fun
         ->test(FinancialAccountsPage::class)
         ->assertSee('R$ 1.300,00')
         ->assertSee('Saldo atual consolidado');
+});
+
+test('investment accounts are excluded from available balance but included in net worth', function () {
+    $user = User::factory()->create();
+    $checking = $user->accounts()->create(['name' => 'Conta corrente', 'type' => 'checking', 'initial_balance' => 1000]);
+    $investment = $user->accounts()->create(['name' => 'Investimentos', 'type' => 'investments', 'initial_balance' => 500]);
+    app(TransferService::class)->create($user, [
+        'from_account_id' => $checking->id,
+        'to_account_id' => $investment->id,
+        'amount' => 200,
+        'transfer_date' => '2026-08-09',
+        'status' => 'settled',
+    ]);
+
+    $summary = app(AccountBalanceService::class)->summarizeForUser($user);
+
+    expect($summary['consolidated']['realized_balance'])->toBe(800.0)
+        ->and($summary['net_worth']['realized_balance'])->toBe(1500.0);
 });

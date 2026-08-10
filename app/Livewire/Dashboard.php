@@ -47,7 +47,10 @@ class Dashboard extends Component
         if ($this->selectedCardId !== '' && ! $selectedCard) {
             $this->selectedCardId = '';
         }
-        $transactions = $user->transactions()->where('status', '!=', 'canceled');
+        $transactions = $user->transactions()->where('status', '!=', 'canceled')->where(function ($query) {
+            $query->whereNull('financial_account_id')
+                ->orWhereHas('account', fn ($accountQuery) => $accountQuery->whereNotIn('type', ['investments', 'savings']));
+        });
         if ($selectedCard) {
             $transactions->where('credit_card_id', $selectedCard->id);
         }
@@ -67,7 +70,10 @@ class Dashboard extends Component
             ->sortDesc()
             ->take(5);
         $largestExpenses = $periodTransactions->where('type', 'expense')->sortByDesc('amount')->take(5);
-        $upcomingQuery = $user->transactions()->with(['category', 'creditCard'])->where('status', 'pending')->whereBetween('due_date', [today(), today()->addDays(7)]);
+        $upcomingQuery = $user->transactions()->with(['category', 'creditCard'])->where('status', 'pending')->whereBetween('due_date', [today(), today()->addDays(7)])->where(function ($query) {
+            $query->whereNull('financial_account_id')
+                ->orWhereHas('account', fn ($accountQuery) => $accountQuery->whereNotIn('type', ['investments', 'savings']));
+        });
         if ($selectedCard) {
             $upcomingQuery->where('credit_card_id', $selectedCard->id);
         }
@@ -84,7 +90,10 @@ class Dashboard extends Component
         $cardUtilization = $cardConsolidated['limit'] > 0
             ? min(100, max(0, ($cardConsolidated['used_limit'] / $cardConsolidated['limit']) * 100))
             : 0;
-        $currentBalance = $accountBalances->currentBalanceForUser($user);
+        $accountSummary = $accountBalances->summarizeForUser($user);
+        $currentBalance = $accountSummary['consolidated']['realized_balance'];
+        $projectedBalance = $accountSummary['consolidated']['projected_balance'];
+        $netWorth = $accountSummary['net_worth']['realized_balance'];
 
         return view('livewire.dashboard', [
             'start' => $start,
@@ -93,6 +102,8 @@ class Dashboard extends Component
             'income' => $income,
             'expense' => $expense,
             'currentBalance' => $currentBalance,
+            'projectedBalance' => $projectedBalance,
+            'netWorth' => $netWorth,
             'settledIncome' => $settledIncome,
             'settledExpense' => $settledExpense,
             'incomeChange' => $this->percentageChange($income, $comparisonIncome),

@@ -1,7 +1,7 @@
 <main class="auth-wrap">
     <section class="auth-card">
         <div class="auth-form-pane">
-            <a wire:navigate href="{{ route('dashboard') }}" class="auth-logo"><img src="{{ asset('logo.svg') }}" alt="Cadê o Meu Dinheiro?"></a>
+            <a wire:navigate href="{{ route('dashboard') }}" class="auth-logo"><img src="{{ asset('logo.svg') }}" alt="Cadim"></a>
             <div class="auth-intro"><p class="eyebrow">BEM-VINDO DE VOLTA</p><h1>Suas finanças,<br>claras e sob controle.</h1><p>Acesse sua conta para acompanhar cada passo do seu dinheiro.</p></div>
             <form wire:submit="login" class="auth-form">
                 <label class="auth-field">E-mail<input wire:model="email" type="email" autocomplete="email" autofocus placeholder="voce@exemplo.com"></label>

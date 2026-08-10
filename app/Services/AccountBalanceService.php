@@ -53,7 +53,7 @@ class AccountBalanceService
     }
 
     /**
-     * @return array{accounts: Collection<int, array<string, float>>, consolidated: array<string, float>}
+     * @return array{accounts: Collection<int, array<string, float>>, consolidated: array<string, float>, net_worth: array<string, float>}
      */
     public function summarizeForUser(User $user): array
     {
@@ -66,21 +66,18 @@ class AccountBalanceService
             fn (FinancialAccount $account): array => [$account->id => $this->summarize($account)]
         );
 
+        $operationalSummaries = $accounts
+            ->reject(fn (FinancialAccount $account): bool => $account->isInvestment())
+            ->mapWithKeys(fn (FinancialAccount $account): array => [$account->id => $summaries[$account->id]]);
+        $sum = static fn (Collection $items, string $key): float => (float) $items->sum($key);
+        $keys = ['initial_balance', 'settled_income', 'settled_expense', 'pending_income', 'pending_expense', 'settled_transfer_in', 'settled_transfer_out', 'pending_transfer_in', 'pending_transfer_out', 'realized_balance', 'projected_balance'];
+        $consolidated = collect($keys)->mapWithKeys(fn (string $key): array => [$key => $sum($operationalSummaries, $key)])->all();
+        $netWorth = collect($keys)->mapWithKeys(fn (string $key): array => [$key => $sum($summaries, $key)])->all();
+
         return [
             'accounts' => $summaries,
-            'consolidated' => [
-                'initial_balance' => (float) $summaries->sum('initial_balance'),
-                'settled_income' => (float) $summaries->sum('settled_income'),
-                'settled_expense' => (float) $summaries->sum('settled_expense'),
-                'pending_income' => (float) $summaries->sum('pending_income'),
-                'pending_expense' => (float) $summaries->sum('pending_expense'),
-                'settled_transfer_in' => (float) $summaries->sum('settled_transfer_in'),
-                'settled_transfer_out' => (float) $summaries->sum('settled_transfer_out'),
-                'pending_transfer_in' => (float) $summaries->sum('pending_transfer_in'),
-                'pending_transfer_out' => (float) $summaries->sum('pending_transfer_out'),
-                'realized_balance' => (float) $summaries->sum('realized_balance'),
-                'projected_balance' => (float) $summaries->sum('projected_balance'),
-            ],
+            'consolidated' => $consolidated,
+            'net_worth' => $netWorth,
         ];
     }
 
@@ -90,6 +87,7 @@ class AccountBalanceService
 
         return (float) $user->accounts()
             ->where('is_archived', false)
+            ->whereNotIn('type', ['investments', 'savings'])
             ->get()
             ->sum(fn (FinancialAccount $account): float => $this->summarize($account, $asOf)['realized_balance']);
     }

@@ -13,6 +13,20 @@ class FinancialAccount extends Model
         return ['initial_balance' => 'decimal:2', 'is_archived' => 'boolean'];
     }
 
+    public function isInvestment(): bool
+    {
+        return in_array($this->type, ['investments', 'savings'], true);
+    }
+
+    public function getTypeLabelAttribute(): string
+    {
+        return match ($this->type) {
+            'investments', 'savings' => 'Investimentos',
+            'cash' => 'Dinheiro',
+            default => 'Conta corrente',
+        };
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

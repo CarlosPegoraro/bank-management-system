@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Termos de Uso — Cadê o Meu Dinheiro?</title>
+    <title>Termos de Uso — Cadim</title>
     <link rel="icon" type="image/svg+xml" href="{{ asset('logo.svg') }}">
     @vite(['resources/css/app.css','resources/js/app.js'])
     <style>
@@ -28,13 +28,13 @@
 <body class="auth-page">
     <main class="terms-wrap">
         <article class="terms-card">
-            <a href="{{ route('login') }}" class="auth-logo"><img src="{{ asset('logo.svg') }}" alt="Cadê o Meu Dinheiro?"></a>
+            <a href="{{ route('login') }}" class="auth-logo"><img src="{{ asset('logo.svg') }}" alt="Cadim"></a>
             <p class="eyebrow">DOCUMENTO V{{ config('legal.terms_version') }}</p>
             <h1>Termos de Uso</h1>
-            <p class="terms-lead">Leia estas regras antes de criar sua conta no Cadê o Meu Dinheiro?. Ao marcar a opção de aceite no cadastro, você declara que leu e concorda com este documento.</p>
+            <p class="terms-lead">Leia estas regras antes de criar sua conta no Cadim. Ao marcar a opção de aceite no cadastro, você declara que leu e concorda com este documento.</p>
 
             <h2>1. Sobre o serviço</h2>
-            <p>O Cadê o Meu Dinheiro? é uma ferramenta de organização financeira pessoal. Ele permite registrar receitas, despesas, contas, cartões, transferências, orçamentos e metas para facilitar o acompanhamento da sua vida financeira.</p>
+            <p>O Cadim é uma ferramenta de organização financeira pessoal. Ele permite registrar receitas, despesas, contas, cartões, transferências, orçamentos e metas para facilitar o acompanhamento da sua vida financeira.</p>
             <p>O serviço não é instituição financeira, banco, corretora, emissor de cartão ou consultoria de investimentos. Não movimentamos seu dinheiro e não executamos pagamentos ou transações em seu nome.</p>
 
             <h2>2. Cadastro e responsabilidade pela conta</h2>

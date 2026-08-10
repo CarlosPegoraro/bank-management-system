@@ -11,5 +11,11 @@ test('a visitor can register and access the dashboard', async ({ page }) => {
     await page.getByRole('button', { name: 'Criar minha conta' }).click();
 
     await expect(page).toHaveURL(/\/dashboard$/);
-    await expect(page.getByText('Cadê o Meu Dinheiro?')).toBeVisible();
+    await expect(page.getByText('Cadim')).toBeVisible();
+
+    await page.getByRole('button', { name: 'Ativar modo escuro' }).click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    await page.getByRole('link', { name: 'Transações' }).click();
+    await expect(page).toHaveURL(/\/transactions$/);
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
 });

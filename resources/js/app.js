@@ -9,6 +9,11 @@ const updateThemeToggle = () => {
     });
 };
 
+const applySavedTheme = () => {
+    const savedTheme = localStorage.getItem('theme');
+    document.documentElement.dataset.theme = savedTheme === 'dark' ? 'dark' : 'light';
+};
+
 document.addEventListener('click', (event) => {
     const target = event.target;
     const button = target instanceof Element ? target.closest('[data-theme-toggle]') : null;
@@ -20,8 +25,13 @@ document.addEventListener('click', (event) => {
     updateThemeToggle();
 });
 
+applySavedTheme();
 updateThemeToggle();
-document.addEventListener('livewire:navigated', updateThemeToggle);
+document.addEventListener('livewire:navigating', applySavedTheme);
+document.addEventListener('livewire:navigated', () => {
+    applySavedTheme();
+    updateThemeToggle();
+});
 
 document.addEventListener('keydown', (event) => {
     const target = event.target;

@@ -25,7 +25,7 @@ class FinancialDemoSeeder extends Seeder
         );
         $reserve = $user->accounts()->firstOrCreate(
             ['name' => 'Reserva de emergência'],
-            ['type' => 'savings', 'initial_balance' => 15000, 'color' => 'sky'],
+            ['type' => 'investments', 'initial_balance' => 15000, 'color' => 'sky'],
         );
         $card = $user->creditCards()->firstOrCreate(
             ['name' => 'Cartão Nubank'],

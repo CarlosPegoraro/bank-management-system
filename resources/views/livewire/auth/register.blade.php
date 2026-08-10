@@ -1,7 +1,7 @@
 <main class="auth-wrap">
     <section class="auth-card">
         <div class="auth-form-pane">
-            <a wire:navigate href="{{ route('dashboard') }}" class="auth-logo"><img src="{{ asset('logo.svg') }}" alt="Cadê o Meu Dinheiro?"></a>
+            <a wire:navigate href="{{ route('dashboard') }}" class="auth-logo"><img src="{{ asset('logo.svg') }}" alt="Cadim"></a>
             <div class="auth-intro"><p class="eyebrow">COMECE AGORA</p><h1>Uma vida financeira<br>mais leve começa aqui.</h1><p>Crie sua conta grátis e dê mais clareza às suas decisões.</p></div>
             <form wire:submit="register" class="auth-form">
                 <label class="auth-field">Nome completo<input wire:model="name" type="text" autocomplete="name" placeholder="Como podemos te chamar?"></label>

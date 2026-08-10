@@ -45,7 +45,7 @@ class FinancialAccountsPage extends Component
 
     public function saveAccount()
     {
-        $d = $this->validate(['account.name' => 'required|max:100', 'account.type' => 'required|in:checking,savings,cash', 'account.initial_balance' => 'nullable|numeric']);
+        $d = $this->validate(['account.name' => 'required|max:100', 'account.type' => 'required|in:checking,investments,cash', 'account.initial_balance' => 'nullable|numeric']);
         if ($this->editingAccountId) {
             auth()->user()->accounts()->whereKey($this->editingAccountId)->firstOrFail()->update($d['account']);
             $message = 'Conta atualizada com sucesso.';
@@ -64,6 +64,9 @@ class FinancialAccountsPage extends Component
         $account = auth()->user()->accounts()->whereKey($id)->firstOrFail();
         $this->editingAccountId = $account->id;
         $this->account = ['name' => $account->name, 'type' => $account->type, 'initial_balance' => (string) $account->initial_balance];
+        if ($this->account['type'] === 'savings') {
+            $this->account['type'] = 'investments';
+        }
         $this->resetValidation();
         $this->accountModalOpen = true;
     }
@@ -242,6 +245,7 @@ class FinancialAccountsPage extends Component
             'transfers' => auth()->user()->transfers()->with(['fromAccount', 'toAccount'])->latest('transfer_date')->latest()->limit(12)->get(),
             'balanceSummaries' => $summary['accounts'],
             'consolidated' => $summary['consolidated'],
+            'netWorth' => $summary['net_worth'],
             'cardSummaries' => $cardSummary['cards'],
             'cardConsolidated' => $cardSummary['consolidated'],
         ])->layout('layouts.app');
