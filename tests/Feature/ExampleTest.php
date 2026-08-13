@@ -7,8 +7,11 @@ use App\Livewire\FinancialAccountsPage;
 use App\Models\User;
 use Livewire\Livewire;
 
-test('guests are redirected to login', function () {
-    $this->get('/')->assertRedirect(route('login'));
+test('visitors can open the public landing page', function () {
+    $this->get('/')->assertOk()
+        ->assertSee('Seu dinheiro no lugar')
+        ->assertSee(route('register'), false)
+        ->assertSee(route('login'), false);
 });
 
 test('application URLs use English slugs', function () {

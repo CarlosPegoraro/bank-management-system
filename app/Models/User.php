@@ -10,13 +10,13 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    protected $fillable = ['name', 'email', 'password', 'avatar_icon', 'terms_accepted_at', 'terms_version'];
+    protected $fillable = ['name', 'email', 'password', 'avatar_icon', 'terms_accepted_at', 'terms_version', 'onboarding_completed_at'];
 
     protected $hidden = ['password', 'remember_token'];
 
     protected function casts(): array
     {
-        return ['email_verified_at' => 'datetime', 'password' => 'hashed', 'terms_accepted_at' => 'datetime'];
+        return ['email_verified_at' => 'datetime', 'password' => 'hashed', 'terms_accepted_at' => 'datetime', 'onboarding_completed_at' => 'datetime'];
     }
 
     public function categories()
@@ -57,5 +57,15 @@ class User extends Authenticatable
     public function transfers()
     {
         return $this->hasMany(Transfer::class);
+    }
+
+    public function onboardingEvents()
+    {
+        return $this->hasMany(OnboardingEvent::class);
+    }
+
+    public function supportFeedback()
+    {
+        return $this->hasMany(SupportFeedback::class);
     }
 }
