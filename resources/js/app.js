@@ -54,6 +54,37 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
+const closeMobileMenu = () => {
+    document.body.classList.remove('mobile-menu-open');
+    const sidebar = document.querySelector('[data-mobile-sidebar]');
+    const toggle = document.querySelector('[data-mobile-menu-toggle]');
+    sidebar?.classList.remove('is-open');
+    toggle?.setAttribute('aria-expanded', 'false');
+    toggle?.setAttribute('aria-label', 'Abrir menu');
+};
+
+const toggleMobileMenu = () => {
+    const sidebar = document.querySelector('[data-mobile-sidebar]');
+    const toggle = document.querySelector('[data-mobile-menu-toggle]');
+    if (!sidebar || !toggle) return;
+    const open = sidebar.classList.toggle('is-open');
+    document.body.classList.toggle('mobile-menu-open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+};
+
+document.addEventListener('click', (event) => {
+    const target = event.target instanceof Element ? event.target : null;
+    if (target?.closest('[data-mobile-menu-toggle]')) toggleMobileMenu();
+    if (target?.closest('[data-mobile-menu-close], [data-mobile-sidebar] a')) closeMobileMenu();
+});
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeMobileMenu();
+});
+
+document.addEventListener('livewire:navigated', closeMobileMenu);
+
 let helpStep = 0;
 let helpTarget = null;
 

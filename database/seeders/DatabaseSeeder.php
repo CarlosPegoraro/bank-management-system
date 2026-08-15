@@ -22,7 +22,9 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin Test User',
             'email' => 'admin@example.com',
             'password' => Hash::make('password'),
+            'role' => 'admin',
         ]);
+        User::query()->where('email', 'admin@example.com')->update(['role' => 'admin']);
 
         $this->call(CategorySeeder::class);
         $this->call(FinancialDemoSeeder::class);

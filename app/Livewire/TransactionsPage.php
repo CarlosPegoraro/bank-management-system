@@ -58,6 +58,20 @@ class TransactionsPage extends Component
 
     public array $importFields = [];
 
+    protected function messages(): array
+    {
+        return [
+            'form.amount.required' => 'Informe o valor da transação.',
+            'form.amount.numeric' => 'Informe um valor numérico válido.',
+            'form.amount.min' => 'O valor deve ser maior que zero.',
+            'form.description.required' => 'Informe uma descrição.',
+            'form.due_date.required' => 'Informe uma data.',
+            'editForm.amount.required' => 'Informe o valor da transação.',
+            'editForm.amount.numeric' => 'Informe um valor numérico válido.',
+            'editForm.amount.min' => 'O valor deve ser maior que zero.',
+        ];
+    }
+
     public function mount()
     {
         $this->search = $this->search ?: request()->string('search')->toString();

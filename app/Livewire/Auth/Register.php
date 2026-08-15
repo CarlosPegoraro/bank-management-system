@@ -3,6 +3,7 @@
 namespace App\Livewire\Auth;
 
 use App\Models\User;
+use App\Services\AuditService;
 use Database\Seeders\CategorySeeder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -32,11 +33,14 @@ class Register extends Component
             'name' => $d['name'],
             'email' => $d['email'],
             'password' => Hash::make($d['password']),
+            'role' => 'user',
             'terms_accepted_at' => now(),
             'terms_version' => config('legal.terms_version', '2026-08-09'),
         ]);
         CategorySeeder::seedFor($u);
         Auth::login($u);
+        $u->forceFill(['last_login_at' => now()])->save();
+        app(AuditService::class)->record($u, 'auth.register');
 
         return $this->redirectRoute('dashboard', navigate: true);
     }

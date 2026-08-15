@@ -3,11 +3,11 @@
     <div class="settings-grid">
         <section class="panel settings-panel"><div class="settings-title"><div><h2>Dados pessoais</h2><p>Estas informações aparecem na sua conta.</p></div><span class="settings-avatar">{{ $avatarIcon ?: strtoupper(substr($name, 0, 1)) }}</span></div>
             <form wire:submit="saveProfile" class="settings-form">
-                <label class="field">Nome<input wire:model="name" autocomplete="name"></label>
-                <label class="field">E-mail<input wire:model="email" type="email" autocomplete="email"></label>
+                <label class="field">Nome<input wire:model.live="name" autocomplete="name" @error('name') aria-invalid="true" @enderror></label>
+                <label class="field">E-mail<input wire:model.live="email" type="email" autocomplete="email" @error('email') aria-invalid="true" @enderror></label>
                 <fieldset class="avatar-picker"><legend>Ícone do perfil</legend><div>@foreach(['💸', '🌱', '📈', '💳', '🎯', '✨'] as $icon)<button type="button" wire:click="$set('avatarIcon', '{{ $icon }}')" @class(['selected' => $avatarIcon === $icon]) aria-label="Usar ícone {{ $icon }}">{{ $icon }}</button>@endforeach</div></fieldset>
                 @error('name')<p class="form-error">{{ $message }}</p>@enderror @error('email')<p class="form-error">{{ $message }}</p>@enderror
-                <div class="settings-actions"><span x-data x-on:profile-saved.window="setTimeout(() => $el.textContent = '', 2500)" wire:ignore.self></span><button class="btn-primary">Salvar alterações</button></div>
+                <div class="settings-actions"><span class="text-xs text-emerald-700" role="status">{{ $profileMessage }}</span><button type="submit" class="btn-primary" wire:loading.attr="disabled" wire:target="saveProfile"><span wire:loading.remove wire:target="saveProfile">Salvar alterações</span><span wire:loading wire:target="saveProfile">Salvando...</span></button></div>
             </form>
         </section>
         <section class="panel settings-panel"><div class="settings-title"><div><h2>Segurança</h2><p>Use uma senha forte e exclusiva.</p></div><span class="security-icon">⌑</span></div>

@@ -43,7 +43,7 @@ test('registration creates default categories for the user', function () {
     $this->assertDatabaseCount('categories', 10);
     expect($user->categories()->count())->toBe(10);
     expect($user->terms_accepted_at)->not->toBeNull()
-        ->and($user->terms_version)->toBe('2026-08-09');
+        ->and($user->terms_version)->toBe('2026-08-14');
 });
 
 test('registration requires acceptance of the terms', function () {

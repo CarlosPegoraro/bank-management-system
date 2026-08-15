@@ -134,13 +134,14 @@
         'budgets' => ['title' => 'Planeje seus próximos passos', 'intro' => 'Orçamentos controlam gastos; metas dão direção para o dinheiro que você quer guardar.', 'steps' => [['selector' => '.tabs-list', 'title' => 'Escolha o objetivo', 'text' => 'Alterne entre Orçamentos e Metas.'], ['selector' => '.tab-panel', 'title' => 'Acompanhe o progresso', 'text' => 'Crie um plano e volte aqui para acompanhar quanto já foi usado ou guardado.']]],
         'profile' => ['title' => 'Seu perfil', 'intro' => 'Mantenha seus dados e sua segurança sempre em dia.', 'steps' => [['selector' => '.settings-grid', 'title' => 'Duas áreas importantes', 'text' => 'Atualize seus dados pessoais no primeiro cartão e sua senha no segundo.']]],
         'support' => ['title' => 'Como usar a central', 'intro' => 'Encontre um artigo ou faça o tour para entender esta página.', 'steps' => [['selector' => '.support-toolbar', 'title' => 'Busque uma resposta', 'text' => 'Digite uma palavra para filtrar os artigos da base de conhecimento.'], ['selector' => '.support-grid', 'title' => 'Guias práticos', 'text' => 'Abra qualquer artigo para ver o passo a passo completo.']]],
+        'changelog' => ['title' => 'Acompanhe as novidades', 'intro' => 'Veja o que mudou e descubra os recursos mais recentes do Cadim.', 'steps' => [['selector' => '.changelog-hero', 'title' => 'Atualizações do produto', 'text' => 'Aqui você encontra as melhorias e recursos adicionados ao Cadim.'], ['selector' => '.changelog-list', 'title' => 'Histórico de versões', 'text' => 'Cada entrada mostra a versão, a data e os detalhes da atualização.']]],
     ];
     $helpKey = request()->route()?->getName() === 'accounts' ? 'accounts' : (request()->route()?->getName() ?? 'dashboard');
     $activeHelp = $helpContent[$helpKey] ?? $helpContent['dashboard'];
 @endphp
 <body class="app-shell" data-onboarding-complete="{{ auth()->user()->onboarding_completed_at ? 'true' : 'false' }}" data-help-tour="{{ auth()->user()->onboarding_completed_at ? $helpKey : 'first-access' }}">
     <div class="min-h-screen lg:flex">
-        <aside class="app-sidebar">
+        <aside id="mobile-sidebar" class="app-sidebar" data-mobile-sidebar>
             <a wire:navigate href="{{ route('dashboard') }}" class="brand">
                 <img src="{{ asset('logo.svg') }}" alt="Cadim">
             </a>
@@ -152,17 +153,20 @@
                 <a wire:navigate href="{{ route('categories') }}" @class(['app-nav-link','is-active' => request()->routeIs('categories')])>Categorias</a>
                 <a wire:navigate href="{{ route('budgets') }}" @class(['app-nav-link','is-active' => request()->routeIs('budgets')])>Orçamentos e metas</a>
                 <a wire:navigate href="{{ route('support') }}" @class(['app-nav-link','is-active' => request()->routeIs('support')])><span class="nav-help-icon">?</span>Central de suporte</a>
+                <a wire:navigate href="{{ route('changelog') }}" @class(['app-nav-link','is-active' => request()->routeIs('changelog')])>Novidades</a>
+                @if(auth()->user()->isAdmin())<a wire:navigate href="{{ route('admin.dashboard') }}" @class(['app-nav-link','is-active' => request()->routeIs('admin.*')])>Painel admin</a>@endif
             </nav>
             <div class="sidebar-support"><span class="sidebar-support-icon">?</span><div><b>Precisa de ajuda?</b><small>Aprenda em poucos minutos.</small></div><button type="button" data-start-tour aria-label="Iniciar tour guiado">→</button></div>
         </aside>
+        <button type="button" class="mobile-menu-backdrop" data-mobile-menu-close aria-label="Fechar menu"></button>
         <section class="min-w-0 flex-1">
             <header class="topbar">
-                <p class="text-sm font-semibold text-slate-800">@yield('page-title', 'Dashboard')</p>
+                <div class="topbar-heading"><button type="button" class="mobile-menu-toggle" data-mobile-menu-toggle aria-expanded="false" aria-controls="mobile-sidebar" aria-label="Abrir menu"><i class="bi bi-list" aria-hidden="true"></i></button><p class="text-sm font-semibold text-slate-800">@yield('page-title', 'Dashboard')</p></div>
                 <div class="topbar-actions">
                     <form method="GET" action="{{ route('transactions') }}" class="search-box"><span>⌕</span><input name="search" value="{{ request()->routeIs('transactions') ? request('search') : '' }}" type="search" placeholder="Buscar transação"></form>
                     <button type="button" class="help-button" data-help-open aria-label="Abrir ajuda desta página">?</button>
                     <button type="button" class="theme-toggle" data-theme-toggle onclick="window.toggleTheme(event)" aria-label="Ativar modo escuro" aria-pressed="false"><span class="theme-toggle-track"><span class="theme-toggle-thumb" data-theme-icon>☾</span></span></button>
-                    <details class="notifications-menu"><summary class="icon-button relative" aria-label="Notificações">♧@if(($financialNotifications['count'] ?? 0) > 0)<span class="notification-badge">{{ $financialNotifications['count'] }}</span>@endif</summary><div class="notifications-dropdown"><div class="flex items-center justify-between border-b border-slate-100 px-3 py-2.5"><b class="text-xs text-slate-800">Notificações</b>@if(($financialNotifications['count'] ?? 0) > 0)<small class="text-[10px] text-slate-400">{{ $financialNotifications['count'] }} alerta(s)</small>@endif</div>@forelse(($financialNotifications['items'] ?? []) as $notification)<a href="{{ $notification['url'] }}" wire:navigate class="block border-b border-slate-50 px-3 py-2.5 hover:bg-emerald-50"><b class="block text-xs text-slate-700">{{ $notification['title'] }}</b><small class="mt-0.5 block text-[10px] leading-relaxed text-slate-400">{{ $notification['text'] }}</small></a>@empty<p class="px-3 py-5 text-center text-xs text-slate-400">Tudo em dia por aqui.</p>@endforelse</div></details>
+                    <details class="notifications-menu"><summary class="icon-button relative" aria-label="Notificações"><i class="bi bi-bell" aria-hidden="true"></i>@if(($financialNotifications['count'] ?? 0) > 0)<span class="notification-badge">{{ $financialNotifications['count'] }}</span>@endif</summary><div class="notifications-dropdown"><div class="flex items-center justify-between border-b border-slate-100 px-3 py-2.5"><b class="text-xs text-slate-800">Notificações</b>@if(($financialNotifications['count'] ?? 0) > 0)<small class="text-[10px] text-slate-400">{{ $financialNotifications['count'] }} alerta(s)</small>@endif</div>@forelse(($financialNotifications['items'] ?? []) as $notification)<a href="{{ $notification['url'] }}" wire:navigate class="block border-b border-slate-50 px-3 py-2.5 hover:bg-emerald-50"><b class="block text-xs text-slate-700">{{ $notification['title'] }}</b><small class="mt-0.5 block text-[10px] leading-relaxed text-slate-400">{{ $notification['text'] }}</small></a>@empty<p class="px-3 py-5 text-center text-xs text-slate-400">Tudo em dia por aqui.</p>@endforelse</div></details>
                     <details class="profile-menu">
                         <summary class="profile-badge" aria-label="Abrir menu do perfil"><span class="profile-avatar">{{ auth()->user()->avatar_icon ?: strtoupper(substr(auth()->user()->name, 0, 1)) }}</span><span class="hidden text-xs font-medium sm:inline">{{ auth()->user()->name }}</span><span class="hidden text-slate-400 sm:inline">⌄</span></summary>
                         <div class="profile-dropdown">

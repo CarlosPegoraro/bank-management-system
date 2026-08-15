@@ -10,13 +10,13 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    protected $fillable = ['name', 'email', 'password', 'avatar_icon', 'terms_accepted_at', 'terms_version', 'onboarding_completed_at'];
+    protected $fillable = ['name', 'email', 'password', 'avatar_icon', 'terms_accepted_at', 'terms_version', 'onboarding_completed_at', 'role', 'last_login_at'];
 
     protected $hidden = ['password', 'remember_token'];
 
     protected function casts(): array
     {
-        return ['email_verified_at' => 'datetime', 'password' => 'hashed', 'terms_accepted_at' => 'datetime', 'onboarding_completed_at' => 'datetime'];
+        return ['email_verified_at' => 'datetime', 'password' => 'hashed', 'terms_accepted_at' => 'datetime', 'onboarding_completed_at' => 'datetime', 'last_login_at' => 'datetime'];
     }
 
     public function categories()
@@ -67,5 +67,20 @@ class User extends Authenticatable
     public function supportFeedback()
     {
         return $this->hasMany(SupportFeedback::class);
+    }
+
+    public function onboardingProgress()
+    {
+        return $this->hasMany(OnboardingProgress::class);
+    }
+
+    public function auditLogs()
+    {
+        return $this->hasMany(AuditLog::class, 'actor_id');
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
     }
 }

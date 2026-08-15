@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Services\AccountBalanceService;
 use App\Services\CreditCardBalanceService;
+use App\Services\OnboardingProgressService;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Livewire\Component;
@@ -35,11 +36,12 @@ class Dashboard extends Component
         }
     }
 
-    public function render(CreditCardBalanceService $cardBalances, AccountBalanceService $accountBalances)
+    public function render(CreditCardBalanceService $cardBalances, AccountBalanceService $accountBalances, OnboardingProgressService $onboarding)
     {
         [$start, $end] = $this->periodRange();
         [$comparisonStart, $comparisonEnd] = $this->comparisonRange($start, $end);
         $user = auth()->user();
+        $onboardingSteps = $onboarding->summary($user);
         $cards = $user->creditCards()->where('is_archived', false)->orderBy('name')->get();
         $selectedCard = $this->selectedCardId !== ''
             ? $cards->firstWhere('id', (int) $this->selectedCardId)
@@ -121,6 +123,7 @@ class Dashboard extends Component
             'cardStyle' => $this->cardStyle($selectedCard?->brand),
             'cardConsolidated' => $cardConsolidated,
             'cardUtilization' => $cardUtilization,
+            'onboardingSteps' => $onboardingSteps,
         ])->layout('layouts.app');
     }
 

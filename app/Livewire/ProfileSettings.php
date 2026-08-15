@@ -14,6 +14,18 @@ class ProfileSettings extends Component
     public string $currentPassword = '';
     public string $password = '';
     public string $passwordConfirmation = '';
+    public string $profileMessage = '';
+
+    protected function messages(): array
+    {
+        return [
+            'name.required' => 'Informe seu nome.',
+            'email.required' => 'Informe seu e-mail.',
+            'email.email' => 'Informe um e-mail válido.',
+            'email.unique' => 'Este e-mail já está sendo usado.',
+            'avatarIcon.max' => 'Escolha um ícone válido.',
+        ];
+    }
 
     public function mount(): void
     {
@@ -24,6 +36,7 @@ class ProfileSettings extends Component
 
     public function saveProfile(): void
     {
+        $this->profileMessage = '';
         $data = $this->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore(auth()->id())],
@@ -31,6 +44,7 @@ class ProfileSettings extends Component
         ]);
 
         auth()->user()->update(['name' => $data['name'], 'email' => $data['email'], 'avatar_icon' => $data['avatarIcon'] ?: null]);
+        $this->profileMessage = 'Dados pessoais salvos com sucesso.';
         $this->dispatch('profile-saved');
     }
 

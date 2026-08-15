@@ -13,6 +13,13 @@
         </div>
     </section>
 
+    @if(collect($onboardingSteps)->contains('completed', false))
+        <section class="mb-5 rounded-xl border border-emerald-100 bg-emerald-50/60 p-4">
+            <div class="flex flex-wrap items-center justify-between gap-3"><div><p class="eyebrow">PRÓXIMO PASSO</p><h2 class="text-base font-semibold text-slate-800">Ative seu controle financeiro</h2><p class="text-sm text-slate-500">Complete o checklist para aproveitar melhor o Cadim.</p></div><strong class="text-sm text-emerald-700">{{ collect($onboardingSteps)->where('completed', true)->count() }}/{{ count($onboardingSteps) }}</strong></div>
+            <div class="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">@foreach($onboardingSteps as $step)<div class="rounded-lg bg-white px-3 py-2 text-xs {{ $step['completed'] ? 'text-emerald-700' : 'text-slate-500' }}">{{ $step['completed'] ? '✓' : '○' }} {{ $step['label'] }}</div>@endforeach</div>
+        </section>
+    @endif
+
     <div class="dashboard-layout">
         <section class="dashboard-main">
             <div class="summary-grid">

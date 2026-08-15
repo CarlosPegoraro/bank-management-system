@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Services\AuditService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
@@ -14,6 +15,15 @@ class Login extends Component
     public string $password = '';
 
     public bool $remember = false;
+
+    protected function messages(): array
+    {
+        return [
+            'email.required' => 'Informe seu e-mail.',
+            'email.email' => 'Informe um e-mail válido.',
+            'password.required' => 'Informe sua senha.',
+        ];
+    }
 
     public function login()
     {
@@ -33,6 +43,9 @@ class Login extends Component
         }
         RateLimiter::clear($key);
         request()->session()->regenerate();
+        $user = auth()->user();
+        $user->forceFill(['last_login_at' => now()])->save();
+        app(AuditService::class)->record($user, 'auth.login');
 
         return $this->redirectRoute('dashboard', navigate: true);
     }

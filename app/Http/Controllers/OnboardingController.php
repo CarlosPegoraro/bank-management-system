@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\AuditService;
+use App\Services\OnboardingProgressService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class OnboardingController extends Controller
 {
-    public function event(Request $request): JsonResponse
+    public function event(Request $request, OnboardingProgressService $progress, AuditService $audit): JsonResponse
     {
         $data = $request->validate([
             'tour' => ['required', 'string', 'max:80'],
@@ -23,6 +25,8 @@ class OnboardingController extends Controller
         if ($data['event'] === 'completed' && $data['tour'] === 'first-access') {
             $request->user()->forceFill(['onboarding_completed_at' => now()])->save();
         }
+        $progress->sync($request->user());
+        $audit->record($request->user(), 'onboarding.'.$data['event'], metadata: ['tour' => $data['tour'], 'step' => $data['step'] ?? null]);
 
         return response()->json(['ok' => true]);
     }
