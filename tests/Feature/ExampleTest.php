@@ -58,6 +58,32 @@ test('registration requires acceptance of the terms', function () {
     expect(User::where('email', 'without-terms@example.com')->exists())->toBeFalse();
 });
 
+test('registration rejects an admin flag', function () {
+    Livewire::test(Register::class)
+        ->set('name', 'Attempted Admin')
+        ->set('email', 'attempted-admin@example.com')
+        ->set('password', 'password')
+        ->set('password_confirmation', 'password')
+        ->set('terms_accepted', true)
+        ->set('admin', true)
+        ->call('register')
+        ->assertHasErrors(['admin']);
+
+    expect(User::where('email', 'attempted-admin@example.com')->exists())->toBeFalse();
+});
+
+test('profile update rejects an admin flag', function () {
+    $user = User::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test(\App\Livewire\ProfileSettings::class)
+        ->set('admin', true)
+        ->call('saveProfile')
+        ->assertHasErrors(['admin']);
+
+    expect($user->fresh()->role)->toBe('user');
+});
+
 test('an authenticated user can save a credit card', function () {
     $user = User::factory()->create();
     $account = $user->accounts()->create(['name' => 'Conta do cartão', 'type' => 'checking', 'initial_balance' => 0]);

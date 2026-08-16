@@ -15,6 +15,7 @@ class ProfileSettings extends Component
     public string $password = '';
     public string $passwordConfirmation = '';
     public string $profileMessage = '';
+    public mixed $admin = null;
 
     protected function messages(): array
     {
@@ -41,6 +42,7 @@ class ProfileSettings extends Component
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore(auth()->id())],
             'avatarIcon' => ['nullable', 'string', 'max:8'],
+            'admin' => ['nullable', 'boolean', Rule::notIn([true, 1, '1'])],
         ]);
 
         auth()->user()->update(['name' => $data['name'], 'email' => $data['email'], 'avatar_icon' => $data['avatarIcon'] ?: null]);

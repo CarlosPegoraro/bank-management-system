@@ -7,6 +7,7 @@ use App\Services\AuditService;
 use Database\Seeders\CategorySeeder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class Register extends Component
@@ -21,6 +22,8 @@ class Register extends Component
 
     public bool $terms_accepted = false;
 
+    public mixed $admin = null;
+
     public function register()
     {
         $d = $this->validate([
@@ -28,6 +31,7 @@ class Register extends Component
             'email' => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'min:8', 'same:password_confirmation'],
             'terms_accepted' => ['accepted'],
+            'admin' => ['nullable', 'boolean', Rule::notIn([true, 1, '1'])],
         ]);
         $u = User::create([
             'name' => $d['name'],
