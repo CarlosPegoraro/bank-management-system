@@ -24,6 +24,9 @@ class TransactionService
             $data['installments'] = $data['recurrence'] === 'installment'
                 ? (int) $data['installments']
                 : null;
+            if ($data['recurrence'] === 'installment') {
+                $data['amount'] = round((float) $data['amount'] / $data['installments'], 2);
+            }
             $end = $data['recurrence'] === 'installment'
                 ? Carbon::parse($data['due_date'])->addMonths(((int) $data['installments']) - 1)
                 : null;

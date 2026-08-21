@@ -5,9 +5,28 @@ namespace Tests\Feature;
 use App\Livewire\Dashboard;
 use App\Models\User;
 use App\Services\RecurrenceService;
+use App\Services\TransactionService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Livewire\Livewire;
+
+test('installment amount is divided across occurrences when created through the service', function () {
+    $user = User::factory()->create();
+
+    app(TransactionService::class)->create($user, [
+        'type' => 'expense',
+        'amount' => 6000,
+        'description' => 'Compra parcelada',
+        'recurrence' => 'installment',
+        'installments' => 6,
+        'due_date' => '2026-08-10',
+        'purchase_date' => '2026-08-10',
+    ]);
+
+    expect($user->transactions()->count())->toBe(6)
+        ->and($user->transactions()->pluck('amount')->map(fn ($amount) => (float) $amount)->all())
+        ->toBe([1000.0, 1000.0, 1000.0, 1000.0, 1000.0, 1000.0]);
+});
 
 test('installments create one occurrence per month', function () {
     $user = User::factory()->create();
